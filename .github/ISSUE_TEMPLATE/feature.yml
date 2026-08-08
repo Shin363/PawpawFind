@@ -1,52 +1,18 @@
 name: 작업 이슈
-description: 기능/버그/작업 단위를 기록하기 위한 템플릿입니다.
-title: "[Feature] "
-labels: []
-body:
-  - type: dropdown
-    id: issue-type
-    attributes:
-      label: 이슈 유형
-      description: 작업 유형을 선택해주세요.
-      options:
-        - Feature
-        - Bug
-        - Chore
-        - Task
-    validations:
-      required: true
+about: 기능/버그/작업 단위를 기록하기 위한 템플릿입니다.
+title: ''
+labels: ''
+assignees: ''
 
-  - type: textarea
-    id: summary
-    attributes:
-      label: Summary
-      description: 작업 내용을 한 줄로 요약해주세요.
-      placeholder: 예) 로그인 페이지 UI 구현
-    validations:
-      required: true
+---
 
-  - type: textarea
-    id: background
-    attributes:
-      label: Background
-      description: 왜 이 작업이 필요한지 적어주세요.
-      placeholder: 예) 사용자가 첫 진입 시 로그인 흐름을 이해할 수 있어야 합니다.
+## 기능 설명
+> 추가하려는 기능에 대해 간결하게 설명해주세요
 
-  - type: textarea
-    id: scope
-    attributes:
-      label: Scope
-      description: 구현할 내용과 제외할 내용을 적어주세요.
-      placeholder: |
-        - 구현할 내용
-        - 확인할 내용
-        - 제외할 내용
+## 작업 상세 내용
 
-  - type: textarea
-    id: acceptance
-    attributes:
-      label: Acceptance Criteria
-      description: 완료 조건을 체크박스로 적어주세요.
-      placeholder: |
-        - [ ] 기능이 정상 동작한다
-        - [ ] 기본 확인이 완료되었다
+- [ ] TODO
+- [ ] TODO
+- [ ] TODO
+
+## 참고할만한 자료(선택)
