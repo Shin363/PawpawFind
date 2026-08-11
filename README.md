@@ -15,6 +15,8 @@
 - eslint-plugin-react-hooks
 - eslint-plugin-jsx-a11y
 - Prettier
+- Husky
+- lint-staged
 
 ### 도입 예정
 
@@ -26,8 +28,6 @@
 - Vitest
 - React Testing Library
 - Playwright
-- Husky
-- lint-staged
 - GitHub Actions
 - Sentry
 
@@ -41,6 +41,7 @@
 ### 품질 관리
 
 - ESLint와 TypeScript를 통해 정적 분석을 수행합니다.
+- Husky와 lint-staged로 커밋 전 staged 파일에 ESLint·Prettier를 자동 적용합니다.
 - Vitest와 React Testing Library로 단위·통합 테스트를 작성합니다.
 - MSW를 이용해 API 응답과 오류 상황을 재현합니다.
 - Playwright로 로그인, 검색, 제보 등록 등 핵심 사용자 흐름을 검증합니다.
@@ -55,12 +56,12 @@ pnpm dev
 
 ## 스크립트
 
-| 명령어              | 설명                        |
-| -------------------- | --------------------------- |
-| `pnpm dev`            | 개발 서버 실행               |
-| `pnpm build`          | 타입 체크 후 프로덕션 빌드   |
-| `pnpm preview`        | 빌드 결과 미리보기           |
-| `pnpm lint`           | ESLint 검사                 |
-| `pnpm lint:fix`       | ESLint 자동 수정             |
-| `pnpm format`         | Prettier로 코드 포맷팅       |
-| `pnpm format:check`   | Prettier 포맷팅 검사         |
+| 명령어              | 설명                       |
+| ------------------- | -------------------------- |
+| `pnpm dev`          | 개발 서버 실행             |
+| `pnpm build`        | 타입 체크 후 프로덕션 빌드 |
+| `pnpm preview`      | 빌드 결과 미리보기         |
+| `pnpm lint`         | ESLint 검사                |
+| `pnpm lint:fix`     | ESLint 자동 수정           |
+| `pnpm format`       | Prettier로 코드 포맷팅     |
+| `pnpm format:check` | Prettier 포맷팅 검사       |
