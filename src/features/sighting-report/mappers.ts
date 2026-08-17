@@ -1,50 +1,62 @@
 import type { TraitSelections } from '../../constants/traitCategories'
 import type { CreateSightingRequest } from './types'
 
-// 백엔드 DB 스키마 기준 (추후 report_features 테이블 방식으로 다시 정리 예정)
-export interface SightingBackendPayload {
-  report_type: 'SIGHTING'
-  title: string
+// 백엔드 Reports.java / ReportFeatures.java 기준 (8/15 실제 백엔드 코드 확인)
+export interface ReportPayload {
+  reportType: 'FOUND'
+  title?: string
   species: string
   size: string
   color: string
-  feature_tags: string
-  happen_date: string
-  happen_hour?: number
-  happen_place: string
-  happen_place_detail: string
+  eventDate: string
+  eventHour?: number
+  happenPlace: string
   latitude: number
   longitude: number
-  fileIds: string[]
+  description: string
 }
 
-function flattenTraitSelections(traits: TraitSelections): string[] {
-  const flatValues: string[] = []
-  for (const value of Object.values(traits)) {
+export interface ReportFeaturePayload {
+  category: string
+  keyword: string
+}
+
+function toFeaturePayloads(traits: TraitSelections): ReportFeaturePayload[] {
+  const rows: ReportFeaturePayload[] = []
+  for (const [category, value] of Object.entries(traits)) {
     if (Array.isArray(value)) {
-      flatValues.push(...value)
+      for (const keyword of value) {
+        rows.push({ category, keyword })
+      }
     } else if (value) {
-      flatValues.push(value)
+      rows.push({ category, keyword: value })
     }
   }
-  return flatValues
+  return rows
 }
 
-export function toBackendPayload(request: CreateSightingRequest): SightingBackendPayload {
+function toIsoDate(dotDate: string): string {
+  return dotDate.replace(/\./g, '-')
+}
+
+export function toReportPayload(request: CreateSightingRequest): ReportPayload {
   return {
-    report_type: 'SIGHTING',
+    reportType: 'FOUND',
     title: request.title,
     species: request.species,
     size: request.size,
     color: request.colors.join(','),
-    feature_tags: flattenTraitSelections(request.traits).join(','),
-    happen_date: request.sightedDate,
-    happen_hour: request.sightedHour,
-    happen_place: request.location.areaName,
-    happen_place_detail: request.location.detail,
+    eventDate: toIsoDate(request.sightedDate),
+    eventHour: request.sightedHour,
+    happenPlace: request.location.areaName,
     latitude: request.location.lat,
     longitude: request.location.lng,
-    fileIds: request.fileIds,
+    description: request.location.detail || '상세 설명 없음',
   }
 }
-//화면에서 쓰는 데이터(예: 색상 여러 개 ['흰색','갈색'])를 서버가 원하는 문자열 형태("흰색,갈색")로 바꿔주는 "번역기
+
+export function toFeaturePayloadsFromRequest(
+  request: CreateSightingRequest,
+): ReportFeaturePayload[] {
+  return toFeaturePayloads(request.traits)
+}

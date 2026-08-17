@@ -10,55 +10,82 @@ interface LocationInputProps {
   }) => void
 }
 
-// 지도(드래그 방식)는 항상 펼쳐진 상태로 표시
-// 현재 위치 버튼 / 검색은 지도 보정용 보조 수단
-
-const MOCK_AREA_SUGGESTIONS = [
-  { name: '서울 마포구 연남동', lat: 37.5665, lng: 126.978 },
-  { name: '서울 마포구 연남로', lat: 37.5601, lng: 126.9252 },
-  { name: '서울 마포구 동교동', lat: 37.5573, lng: 126.9254 },
-  { name: '서울 마포구 성산동', lat: 37.566, lng: 126.9186 },
-  { name: '서울 서대문구 연희동', lat: 37.5695, lng: 126.9366 },
-]
-
-function mockSearchAddress(query: string) {
-  if (!query.trim()) return []
-  return MOCK_AREA_SUGGESTIONS.filter((item) => item.name.includes(query))
-}
-
 export function LocationInput({ onLocationChange }: LocationInputProps) {
   const [selectedArea, setSelectedArea] = useState('')
   const [selectedLat, setSelectedLat] = useState(37.5665)
   const [selectedLng, setSelectedLng] = useState(126.978)
   const [isLocating, setIsLocating] = useState(false)
+  const [locationError, setLocationError] = useState<string | null>(null)
+
   const [searchQuery, setSearchQuery] = useState('')
   const [showSearch, setShowSearch] = useState(false)
+  const [searchResults, setSearchResults] = useState<{ name: string; lat: number; lng: number }[]>(
+    [],
+  )
+  const [isSearching, setIsSearching] = useState(false)
+
+  const [showDetail, setShowDetail] = useState(false)
   const [detail, setDetail] = useState('')
+
+  const [mapMoveTarget, setMapMoveTarget] = useState<{ lat: number; lng: number } | null>(null)
 
   function emitChange(areaName: string, lat: number, lng: number, detailValue: string) {
     onLocationChange({ areaName, lat, lng, detail: detailValue })
   }
 
   function handleUseCurrentLocation() {
+    if (!navigator.geolocation) {
+      setLocationError('이 브라우저에서는 위치 가져오기를 지원하지 않아요.')
+      return
+    }
+
     setIsLocating(true)
-    setTimeout(() => {
-      const area = '서울 마포구 연남동 인근'
-      setSelectedArea(area)
-      setSelectedLat(37.5665)
-      setSelectedLng(126.978)
-      setIsLocating(false)
-      emitChange(area, 37.5665, 126.978, detail)
-    }, 500)
+    setLocationError(null)
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords
+        setSelectedLat(latitude)
+        setSelectedLng(longitude)
+        setIsLocating(false)
+        setMapMoveTarget({ lat: latitude, lng: longitude })
+      },
+      () => {
+        setIsLocating(false)
+        setLocationError(
+          '위치 권한을 허용해주세요. (브라우저 주소창 옆 자물쇠 아이콘에서 설정 가능)',
+        )
+      },
+    )
+  }
+
+  function handleSearch() {
+    if (!searchQuery.trim() || !window.kakao) return
+    setIsSearching(true)
+
+    const places = new window.kakao.maps.services.Places()
+    places.keywordSearch(searchQuery, (result, status) => {
+      setIsSearching(false)
+      if (status === window.kakao!.maps.services.Status.OK) {
+        setSearchResults(
+          result.slice(0, 5).map((item) => ({
+            name: item.place_name,
+            lat: Number(item.y),
+            lng: Number(item.x),
+          })),
+        )
+      } else {
+        setSearchResults([])
+      }
+    })
   }
 
   function handleSelectSuggestion(item: { name: string; lat: number; lng: number }) {
-    const area = `${item.name} 인근`
-    setSelectedArea(area)
     setSelectedLat(item.lat)
     setSelectedLng(item.lng)
     setSearchQuery('')
+    setSearchResults([])
     setShowSearch(false)
-    emitChange(area, item.lat, item.lng, detail)
+    setMapMoveTarget({ lat: item.lat, lng: item.lng })
   }
 
   function handleMapDragResult(location: { areaName: string; lat: number; lng: number }) {
@@ -73,34 +100,43 @@ export function LocationInput({ onLocationChange }: LocationInputProps) {
     emitChange(selectedArea, selectedLat, selectedLng, value)
   }
 
-  const suggestions = mockSearchAddress(searchQuery)
-
   return (
-    <div>
-      <LocationMapPicker onLocationChange={handleMapDragResult} />
+    <div className="location-input-stack">
+      <LocationMapPicker onLocationChange={handleMapDragResult} moveTo={mapMoveTarget} />
 
-      {selectedArea && <p>설정된 위치: {selectedArea}</p>}
-
-      <button type="button" onClick={handleUseCurrentLocation} disabled={isLocating}>
+      <button
+        type="button"
+        className="location-action"
+        onClick={handleUseCurrentLocation}
+        disabled={isLocating}
+      >
         {isLocating ? '위치 확인 중...' : '현재 위치로 설정'}
       </button>
+      {locationError && <p className="error-text">{locationError}</p>}
 
-      <button type="button" onClick={() => setShowSearch((prev) => !prev)}>
+      <button
+        type="button"
+        className="location-secondary-btn"
+        onClick={() => setShowSearch((prev) => !prev)}
+      >
         {showSearch ? '검색 닫기' : '다른 위치 검색'}
       </button>
-
       {showSearch && (
-        <div>
+        <div className="location-search-panel">
           <input
             type="text"
-            placeholder="동 이름을 입력해보세요 (예: 연남동)"
+            placeholder="장소나 주소를 입력해보세요 (예: 연남동, 강남역)"
             value={searchQuery}
             onChange={(event) => setSearchQuery(event.target.value)}
+            onKeyDown={(event) => event.key === 'Enter' && handleSearch()}
           />
-          {suggestions.length > 0 && (
-            <ul>
-              {suggestions.map((item) => (
-                <li key={item.name}>
+          <button type="button" onClick={handleSearch} disabled={isSearching}>
+            {isSearching ? '검색 중...' : '검색'}
+          </button>
+          {searchResults.length > 0 && (
+            <ul className="location-suggestion-list">
+              {searchResults.map((item, index) => (
+                <li key={`${item.name}-${index}`}>
                   <button type="button" onClick={() => handleSelectSuggestion(item)}>
                     {item.name}
                   </button>
@@ -111,15 +147,24 @@ export function LocationInput({ onLocationChange }: LocationInputProps) {
         </div>
       )}
 
-      <label htmlFor="locationDetail">위치 상세 메모 (선택)</label>
-      <textarea
-        id="locationDetail"
-        placeholder="예: 골목 안쪽 편의점 앞, 놀이터 근처 등"
-        value={detail}
-        onChange={(event) => handleDetailChange(event.target.value)}
-      />
+      <button
+        type="button"
+        className="location-secondary-btn"
+        onClick={() => setShowDetail((prev) => !prev)}
+      >
+        {showDetail ? '상세 메모 닫기' : '위치 상세 메모 (선택)'}
+      </button>
+      {showDetail && (
+        <div className="location-detail-panel">
+          <textarea
+            placeholder="예: 골목 안쪽 편의점 앞, 놀이터 근처 등"
+            value={detail}
+            onChange={(event) => handleDetailChange(event.target.value)}
+          />
+        </div>
+      )}
 
-      <p>위치는 동 단위로만 공개돼요.</p>
+      <p className="helper-text">위치는 동 단위로만 공개돼요.</p>
     </div>
   )
 }

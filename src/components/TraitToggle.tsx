@@ -6,8 +6,6 @@ interface TraitToggleProps {
   onChange: (categoryKey: string, value: string | string[]) => void
 }
 
-// 카테고리마다 selectionType이 'single'이면 하나만, 'multi'면 여러 개 선택 가능
-// 버튼(토글) 형태 UI. 스타일은 와이어프레임 확정 후 입힐 예정, 지금은 동작만 확인
 export function TraitToggle({ categories, selections, onChange }: TraitToggleProps) {
   function handleOptionClick(category: TraitCategory, option: string) {
     if (category.selectionType === 'single') {
@@ -36,22 +34,19 @@ export function TraitToggle({ categories, selections, onChange }: TraitTogglePro
   return (
     <div>
       {categories.map((category) => (
-        <fieldset key={category.key}>
-          <legend>
-            {category.label} ({category.selectionType === 'single' ? '하나만' : '여러 개 선택 가능'}
-            )
-          </legend>
+        <div key={category.key} className="chip-row">
           {category.options.map((option) => (
             <button
               key={option}
               type="button"
+              className="trait-chip"
               aria-pressed={isSelected(category, option)}
               onClick={() => handleOptionClick(category, option)}
             >
               {option}
             </button>
           ))}
-        </fieldset>
+        </div>
       ))}
     </div>
   )

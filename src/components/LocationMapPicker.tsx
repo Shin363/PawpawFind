@@ -1,112 +1,112 @@
-import { useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import type { KakaoMap } from '../types/kakao'
 
 interface LocationMapPickerProps {
   onLocationChange: (location: { areaName: string; lat: number; lng: number }) => void
+  moveTo?: { lat: number; lng: number } | null
 }
 
-// 카카오T 출발지 설정 방식: 핀은 화면 중앙 고정, 지도(배경)를 드래그해서 옮김
-// TODO: 실제 카카오맵 SDK 붙이면 이 mock 드래그 로직 대신
-//   kakao.maps.event.addListener(map, 'dragend', ...) 로 교체
-//   좌표->주소 변환도 kakao.maps.services.Geocoder().coord2Address(...) 로 교체
+const DEFAULT_LAT = 37.5665
+const DEFAULT_LNG = 126.978
 
-const BASE_LAT = 37.5665
-const BASE_LNG = 126.978
-const PIXEL_TO_DEGREE = 0.00003 // mock 전용 임의 값. 실제 지도에선 SDK가 좌표를 직접 줌
-
-function mockReverseGeocode(lat: number, lng: number): Promise<string> {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      const latDiff = lat - BASE_LAT
-      const lngDiff = lng - BASE_LNG
-      if (Math.abs(latDiff) < 0.0005 && Math.abs(lngDiff) < 0.0005) {
-        resolve('서울 마포구 연남동 인근')
-      } else if (lngDiff > 0) {
-        resolve('서울 마포구 동교동 인근')
-      } else {
-        resolve('서울 마포구 성산동 인근')
-      }
-    }, 250)
-  })
-}
-
-export function LocationMapPicker({ onLocationChange }: LocationMapPickerProps) {
-  const [translate, setTranslate] = useState({ x: 0, y: 0 })
+export function LocationMapPicker({ onLocationChange, moveTo }: LocationMapPickerProps) {
+  const mapContainerRef = useRef<HTMLDivElement>(null)
+  const mapRef = useRef<KakaoMap | null>(null)
+  const [areaName, setAreaName] = useState('')
   const [isResolving, setIsResolving] = useState(false)
-  const dragState = useRef<{
-    startX: number
-    startY: number
-    startTx: number
-    startTy: number
-  } | null>(null)
+  const [isReady, setIsReady] = useState(false)
 
-  function handlePointerDown(event: React.PointerEvent) {
-    dragState.current = {
-      startX: event.clientX,
-      startY: event.clientY,
-      startTx: translate.x,
-      startTy: translate.y,
+  const resolveAddress = useCallback(
+    (lat: number, lng: number) => {
+      if (!window.kakao) return
+      setIsResolving(true)
+      const geocoder = new window.kakao.maps.services.Geocoder()
+      geocoder.coord2Address(lng, lat, (result, status) => {
+        setIsResolving(false)
+        if (status === window.kakao!.maps.services.Status.OK && result[0]) {
+          const region = result[0].address
+          const name = `${region.region_1depth_name} ${region.region_2depth_name} ${region.region_3depth_name} 인근`
+          setAreaName(name)
+          onLocationChange({ areaName: name, lat, lng })
+        }
+      })
+    },
+    [onLocationChange],
+  )
+
+  useEffect(() => {
+    if (!window.kakao || !window.kakao.maps) {
+      console.error('카카오맵 SDK를 불러오지 못했어요. index.html의 script 태그를 확인해주세요.')
+      return
     }
-    ;(event.target as HTMLElement).setPointerCapture(event.pointerId)
-  }
 
-  function handlePointerMove(event: React.PointerEvent) {
-    if (!dragState.current) return
-    const dx = event.clientX - dragState.current.startX
-    const dy = event.clientY - dragState.current.startY
-    setTranslate({ x: dragState.current.startTx + dx, y: dragState.current.startTy + dy })
-  }
+    window.kakao.maps.load(() => {
+      if (!mapContainerRef.current || !window.kakao) return
 
-  async function handlePointerUp() {
-    if (!dragState.current) return
-    dragState.current = null
+      const map = new window.kakao.maps.Map(mapContainerRef.current, {
+        center: new window.kakao.maps.LatLng(DEFAULT_LAT, DEFAULT_LNG),
+        level: 4,
+      })
+      mapRef.current = map
+      setIsReady(true)
 
-    const lat = BASE_LAT + translate.y * PIXEL_TO_DEGREE
-    const lng = BASE_LNG - translate.x * PIXEL_TO_DEGREE
+      window.kakao.maps.event.addListener(map, 'dragend', () => {
+        const center = map.getCenter()
+        resolveAddress(center.getLat(), center.getLng())
+      })
 
-    setIsResolving(true)
-    const areaName = await mockReverseGeocode(lat, lng)
-    setIsResolving(false)
-    onLocationChange({ areaName, lat, lng })
-  }
+      resolveAddress(DEFAULT_LAT, DEFAULT_LNG)
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  useEffect(() => {
+    if (!moveTo || !mapRef.current || !window.kakao) return
+    const newCenter = new window.kakao.maps.LatLng(moveTo.lat, moveTo.lng)
+    mapRef.current.setCenter(newCenter)
+    resolveAddress(moveTo.lat, moveTo.lng)
+  }, [moveTo, resolveAddress])
 
   return (
     <div>
-      <div
-        style={{
-          position: 'relative',
-          height: 220,
-          overflow: 'hidden',
-          border: '1px solid #ccc',
-          touchAction: 'none',
-          cursor: 'grab',
-        }}
-        onPointerDown={handlePointerDown}
-        onPointerMove={handlePointerMove}
-        onPointerUp={handlePointerUp}
-      >
-        <div
-          style={{
-            position: 'absolute',
-            inset: '-200px',
-            backgroundImage:
-              'linear-gradient(#ddd 1px, transparent 1px), linear-gradient(90deg, #ddd 1px, transparent 1px)',
-            backgroundSize: '40px 40px',
-            transform: `translate(${translate.x}px, ${translate.y}px)`,
-          }}
-        />
+      <div style={{ position: 'relative' }}>
+        <div ref={mapContainerRef} className="location-map" style={{ position: 'relative' }} />
         <div
           style={{
             position: 'absolute',
             top: '50%',
             left: '50%',
             transform: 'translate(-50%, -100%)',
-            fontSize: 28,
+            pointerEvents: 'none',
+            fontSize: 32,
+            zIndex: 10,
           }}
         >
           📍
         </div>
+        {areaName && <div className="location-badge">{areaName}</div>}
       </div>
-      <p>{isResolving ? '주소 확인 중...' : '지도를 움직여서 위치를 맞춰주세요'}</p>
+      <p className="map-hint">
+        {!isReady
+          ? '지도를 불러오는 중...'
+          : isResolving
+            ? '주소 확인 중...'
+            : '지도를 움직여서 위치를 맞춰주세요'}
+      </p>
+      {areaName && !isResolving && (
+        <p
+          style={{
+            textAlign: 'center',
+            fontSize: 14,
+            fontWeight: 700,
+            color: '#111',
+            marginTop: -4,
+            marginBottom: 12,
+          }}
+        >
+          선택한 위치: {areaName}
+        </p>
+      )}
     </div>
   )
 }
