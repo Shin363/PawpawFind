@@ -1,4 +1,5 @@
 import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 import { useSightingReportsQuery } from './hooks/useSightingReportsQuery'
 import './ReportListPage.css'
 
@@ -21,9 +22,7 @@ export function ReportListPage() {
         {isError && (
           <div role="alert" className="report-list-page__feedback">
             <p>목격 제보를 불러오지 못했습니다.</p>
-            <button type="button" onClick={() => void refetch()}>
-              다시 시도
-            </button>
+            <Button onClick={() => void refetch()}>다시 시도</Button>
           </div>
         )}
 

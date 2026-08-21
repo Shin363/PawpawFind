@@ -23,18 +23,6 @@
   text-align: center;
 }
 
-.report-list-page__feedback button {
-  min-height: var(--touch-target-min);
-  padding: 0 1rem;
-  border: 0;
-  border-radius: 8px;
-  background: var(--color-accent);
-  color: var(--color-on-accent);
-  font: inherit;
-  font-weight: 600;
-  cursor: pointer;
-}
-
 .report-list {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
