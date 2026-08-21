@@ -1,7 +1,7 @@
 # API Mocking
 
-백엔드와 독립적으로 화면을 개발하고 테스트하기 위한 Mock API 기준입니다. 다음 단계에서 MSW를
-도입할 때 이 계약을 적용합니다.
+백엔드와 독립적으로 화면을 개발하고 테스트하기 위한 Mock API 기준입니다. 브라우저 개발 환경과
+Vitest 통합 테스트에서 MSW를 사용합니다.
 
 ## 목표
 
@@ -56,9 +56,22 @@ src/
 테스트별 예외 응답은 해당 테스트에서 handler를 일시 override하고 테스트가 끝나면 초기 handler로
 복원합니다.
 
+## 현재 Mock 계약
+
+백엔드 API 명세가 확정되기 전까지 목격 제보 목록은 다음 임시 계약을 사용합니다. 이 경로와 응답은
+프론트엔드 개발을 위한 mock 경계이며, 서버 계약이 확정되면 `src/features/reports/api`의 경로와 타입,
+MSW handler를 함께 변경합니다.
+
+```text
+GET /api/sighting-reports
+```
+
+응답은 공용 `ListResponse<SightingReportListItem>` 형태이며 각 목록 항목은 `id`, `title`,
+`speciesLabel`, `areaText`, `dateText`를 포함합니다.
+
 ## 환경변수
 
-Mock 활성화 여부는 추후 `.env.example`에 선언할 환경변수로 제어합니다.
+Mock 활성화 여부는 `.env.example`에 선언한 환경변수로 제어합니다.
 
 ```dotenv
 VITE_ENABLE_MSW=true

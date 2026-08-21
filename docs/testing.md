@@ -1,7 +1,7 @@
 # Testing
 
-PawpawFind의 테스트 목적과 범위를 정의합니다. 현재 테스트 도구는 아직 설치되지 않았으며, 이 문서는
-다음 단계에서 Vitest, React Testing Library, MSW, Playwright를 도입할 때의 기준입니다.
+PawpawFind의 테스트 목적과 범위를 정의합니다. 통합 테스트는 Vitest, React Testing Library, MSW를
+사용하며 E2E 테스트는 추후 Playwright를 도입할 때 이 기준을 따릅니다.
 
 ## 원칙
 
@@ -44,14 +44,13 @@ Playwright로 배포 가능한 빌드에서 핵심 사용자 흐름을 검증합
 - MSW 서버와 handler 기준은 `docs/api-mocking.md`를 따릅니다.
 - Playwright 테스트는 루트 `e2e`에 둡니다.
 
-## 도입 예정 명령
+## 테스트 명령
 
 ```bash
 pnpm test
 pnpm test:watch
 pnpm test:coverage
-pnpm e2e
 ```
 
-테스트 환경을 도입하면 `pnpm verify`와 GitHub Actions에 `pnpm test`를 포함합니다. 커버리지 수치는
-목표 그 자체로 사용하지 않고, 핵심 흐름의 누락을 찾는 보조 지표로 사용합니다.
+`pnpm verify`와 GitHub Actions는 `pnpm test`를 포함합니다. 커버리지 수치는 목표 그 자체로 사용하지
+않고, 핵심 흐름의 누락을 찾는 보조 지표로 사용합니다.
