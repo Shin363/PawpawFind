@@ -6,6 +6,7 @@ node_modules/
 dist/
 build/
 coverage/
+storybook-static/
 vite.config.js
 vite.config.d.ts
 

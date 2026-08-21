@@ -111,6 +111,7 @@ src/
 ## Verification
 
 - spec과 구현의 props·상태가 일치하는가?
+- 지원하는 상태를 `*.stories.tsx`로 작성했는가?
 - native element와 heading 구조가 적절한가?
 - keyboard와 focus-visible을 확인했는가?
 - disabled와 loading 중 중복 동작이 차단되는가?
@@ -118,8 +119,9 @@ src/
 - 현재 화면의 시각 회귀가 없는가?
 - `pnpm verify`가 통과하는가?
 
-Storybook이나 시각 회귀 도구가 도입되기 전에는 기존 화면 또는 검토용 페이지에서 상태를 직접
-렌더링해 확인합니다.
+공용 UI는 Storybook에서 상태를 독립적으로 확인하고 Chromatic에서 시각 변경을 검토합니다. Storybook
+정적 빌드는 `pnpm verify`에 포함합니다. 새로운 시각 변경은 기준 이미지로 자동 승인하지 않고
+Chromatic에서 의도한 변경인지 확인합니다.
 
 ## 자동화 기준
 
