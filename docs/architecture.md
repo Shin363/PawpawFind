@@ -64,7 +64,7 @@ src/features/<feature>/
 ## 의존 방향
 
 ```text
-app/page -> feature -> shared UI / shared API foundation
+src/main.tsx -> src/App.tsx -> src/features/<feature> -> shared UI / shared API foundation
 ```
 
 - 공용 UI가 feature를 import하지 않습니다.

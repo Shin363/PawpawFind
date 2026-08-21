@@ -1,12 +1,15 @@
 import { screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { AxiosError } from 'axios'
 import { http, HttpResponse } from 'msw'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { server } from '@/mocks/server'
 import { sightingReportsFixture } from '@/mocks/fixtures/reports'
 import { renderWithQueryClient } from '@/test/render'
-import { SIGHTING_REPORTS_API_PATH } from './api/reports.api'
+import * as reportsApi from './api/reports.api'
 import { ReportListPage } from './ReportListPage'
+
+const { SIGHTING_REPORTS_API_PATH } = reportsApi
 
 describe('ReportListPage', () => {
   it('요청 중에는 로딩 상태를 보여준다', () => {
@@ -66,5 +69,29 @@ describe('ReportListPage', () => {
         name: '갈색 소형견을 목격했어요',
       }),
     ).toBeInTheDocument()
+  })
+
+  it('요청 시간이 초과되면 오류를 보여주고 다시 시도할 수 있다', async () => {
+    const getReportsSpy = vi
+      .spyOn(reportsApi, 'getSightingReports')
+      .mockRejectedValueOnce(new AxiosError('timeout of 20000ms exceeded', 'ECONNABORTED'))
+      .mockResolvedValueOnce(sightingReportsFixture)
+
+    try {
+      const user = userEvent.setup()
+      renderWithQueryClient(<ReportListPage />)
+
+      expect(await screen.findByRole('alert')).toHaveTextContent('목격 제보를 불러오지 못했습니다.')
+
+      await user.click(screen.getByRole('button', { name: '다시 시도' }))
+
+      expect(
+        await screen.findByRole('heading', {
+          name: '갈색 소형견을 목격했어요',
+        }),
+      ).toBeInTheDocument()
+    } finally {
+      getReportsSpy.mockRestore()
+    }
   })
 })
