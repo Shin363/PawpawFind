@@ -1,21 +1,22 @@
-import { render, screen } from '@testing-library/react'
+import { screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { http, HttpResponse } from 'msw'
 import { describe, expect, it } from 'vitest'
 import { server } from '@/mocks/server'
 import { sightingReportsFixture } from '@/mocks/fixtures/reports'
+import { renderWithQueryClient } from '@/test/render'
 import { SIGHTING_REPORTS_API_PATH } from './api/reports.api'
 import { ReportListPage } from './ReportListPage'
 
 describe('ReportListPage', () => {
   it('요청 중에는 로딩 상태를 보여준다', () => {
-    render(<ReportListPage />)
+    renderWithQueryClient(<ReportListPage />)
 
     expect(screen.getByRole('status')).toHaveTextContent('목격 제보를 불러오는 중입니다.')
   })
 
   it('목격 제보 목록을 보여준다', async () => {
-    render(<ReportListPage />)
+    renderWithQueryClient(<ReportListPage />)
 
     expect(
       await screen.findByRole('heading', {
@@ -35,7 +36,7 @@ describe('ReportListPage', () => {
       ),
     )
 
-    render(<ReportListPage />)
+    renderWithQueryClient(<ReportListPage />)
 
     expect(await screen.findByText('등록된 목격 제보가 없습니다.')).toBeInTheDocument()
   })
@@ -54,7 +55,7 @@ describe('ReportListPage', () => {
     )
 
     const user = userEvent.setup()
-    render(<ReportListPage />)
+    renderWithQueryClient(<ReportListPage />)
 
     expect(await screen.findByRole('alert')).toHaveTextContent('목격 제보를 불러오지 못했습니다.')
 

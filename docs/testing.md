@@ -41,6 +41,7 @@ Playwright로 배포 가능한 빌드에서 핵심 사용자 흐름을 검증합
 
 - 테스트 파일은 대상 코드 가까이에 `*.test.ts` 또는 `*.test.tsx`로 둡니다.
 - 공통 테스트 초기화는 `src/test`에 둡니다.
+- TanStack Query를 사용하는 화면은 `src/test/render.tsx`의 테스트용 provider로 렌더링합니다.
 - MSW 서버와 handler 기준은 `docs/api-mocking.md`를 따릅니다.
 - Playwright 테스트는 루트 `e2e`에 둡니다.
 

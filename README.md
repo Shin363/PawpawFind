@@ -21,11 +21,12 @@
 - React Testing Library
 - MSW
 - GitHub Actions
+- Axios
+- TanStack Query
 
 ### 도입 예정
 
 - React Router
-- TanStack Query
 - React Hook Form
 - Zod
 - Playwright
