@@ -6,6 +6,8 @@ node_modules/
 dist/
 build/
 coverage/
+vite.config.js
+vite.config.d.ts
 
 # Environment files
 .env

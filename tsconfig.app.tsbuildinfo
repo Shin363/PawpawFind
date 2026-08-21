@@ -1,1 +1,1 @@
-{"root":["./src/app.tsx","./src/main.tsx","./src/api/auth.api.ts","./src/components/button.tsx","./src/features/auth/loginform.tsx","./src/features/auth/index.ts","./src/hooks/useauth.ts","./src/types/domain.ts"],"version":"5.9.3"}
+{"root":["./src/app.tsx","./src/main.tsx","./src/vite-env.d.ts","./src/api/auth.api.ts","./src/components/button.tsx","./src/components/ui/badge/badge.tsx","./src/components/ui/badge/index.ts","./src/features/auth/loginform.tsx","./src/features/auth/index.ts","./src/hooks/useauth.ts","./src/types/domain.ts"],"version":"5.9.3"}
