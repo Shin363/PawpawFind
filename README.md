@@ -17,18 +17,19 @@
 - Prettier
 - Husky
 - lint-staged
+- Vitest
+- React Testing Library
+- MSW
+- GitHub Actions
+- Axios
+- TanStack Query
 
 ### 도입 예정
 
 - React Router
-- TanStack Query
-- MSW
 - React Hook Form
 - Zod
-- Vitest
-- React Testing Library
 - Playwright
-- GitHub Actions
 - Sentry
 
 ### 상태 관리 원칙
@@ -51,17 +52,25 @@
 
 ```bash
 pnpm install
+cp .env.example .env
 pnpm dev
 ```
 
+`.env.example`을 복사하면 개발 환경에서 MSW가 실행되어 백엔드 없이 목격 제보 목록을 확인할 수
+있습니다.
+
 ## 스크립트
 
-| 명령어              | 설명                       |
-| ------------------- | -------------------------- |
-| `pnpm dev`          | 개발 서버 실행             |
-| `pnpm build`        | 타입 체크 후 프로덕션 빌드 |
-| `pnpm preview`      | 빌드 결과 미리보기         |
-| `pnpm lint`         | ESLint 검사                |
-| `pnpm lint:fix`     | ESLint 자동 수정           |
-| `pnpm format`       | Prettier로 코드 포맷팅     |
-| `pnpm format:check` | Prettier 포맷팅 검사       |
+| 명령어               | 설명                       |
+| -------------------- | -------------------------- |
+| `pnpm dev`           | 개발 서버 실행             |
+| `pnpm build`         | 타입 체크 후 프로덕션 빌드 |
+| `pnpm preview`       | 빌드 결과 미리보기         |
+| `pnpm lint`          | ESLint 검사                |
+| `pnpm lint:fix`      | ESLint 자동 수정           |
+| `pnpm format`        | Prettier로 코드 포맷팅     |
+| `pnpm format:check`  | Prettier 포맷팅 검사       |
+| `pnpm test`          | 통합 테스트 한 번 실행     |
+| `pnpm test:watch`    | 변경을 감지하며 테스트     |
+| `pnpm test:coverage` | 테스트 커버리지 확인       |
+| `pnpm verify`        | 전체 품질 검사             |
