@@ -29,6 +29,8 @@ source of truth로 사용하고, 이 파일에 중복해서 적지 않습니다.
 
 공용 UI 컴포넌트를 추가하거나 변경할 때는
 `.claude/skills/design-system-component-workflow/SKILL.md`의 spec-first 흐름을 함께 따릅니다.
+디자인 시스템의 계층과 승격 기준은 `docs/design-system.md`, Claude Design에서 확인한 근거와 후보는
+`docs/design-audit.md`를 source of truth로 사용합니다.
 
 ## 코드 작성 원칙
 
@@ -68,5 +70,7 @@ pnpm format:check
 ## 관련 문서
 
 - 구조와 의존 방향: `docs/architecture.md`
+- 디자인 시스템 경계: `docs/design-system.md`
+- Claude Design 조사: `docs/design-audit.md`
 - 테스트 전략: `docs/testing.md`
 - Mock API 원칙: `docs/api-mocking.md`

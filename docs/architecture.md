@@ -41,7 +41,8 @@ src/features/<feature>/
 - 두 곳 이상에서 실제로 재사용되거나 반복 근거가 명확하다.
 
 공용 컴포넌트 작업은 `.claude/skills/design-system-component-workflow/SKILL.md`를 따르고 public API와
-상태, 접근성을 spec에 먼저 기록합니다.
+상태, 접근성을 spec에 먼저 기록합니다. 공용 승격 기준과 foundation 규칙은
+`docs/design-system.md`, 와이어프레임에서 확인한 근거는 `docs/design-audit.md`를 따릅니다.
 
 ### Shared types and hooks
 
