@@ -62,20 +62,19 @@ reviews:
       instructions: |
         의존성 추가는 필요한 범위인지, 중복 라이브러리인지, 보안과 번들 영향이 없는지 확인합니다.
 
-# 자동 리뷰 설정입니다.
-auto_review:
-  enabled: true # 자동 리뷰 활성화
-  drafts: false # draft PR은 제외
-  base_branches:
-    - 'main' # 기본 브랜치
-    - 'develop' # 개발 브랜치
-  labels:
-    - '!wip' # 작업 중 PR 제외
-    - '!draft' # draft PR 제외
-    - '!skip-review' # 리뷰 생략 라벨 제외
-  ignore_usernames:
-    - 'dependabot' # 의존성 봇 제외
-    - 'renovate' # 업데이트 봇 제외
+  # 자동 리뷰 설정입니다. (reviews 하위에 중첩되어야 인식됩니다)
+  auto_review:
+    enabled: true # 자동 리뷰 활성화
+    drafts: true # draft PR도 리뷰 대상에 포함
+    base_branches:
+      - 'main' # 기본 브랜치
+      - 'develop' # 개발 브랜치
+    labels:
+      - '!wip' # 작업 중 PR 제외
+      - '!skip-review' # 리뷰 생략 라벨 제외
+    ignore_usernames:
+      - 'dependabot' # 의존성 봇 제외
+      - 'renovate' # 업데이트 봇 제외
 
 # 채팅 기능 설정입니다.
 chat:
