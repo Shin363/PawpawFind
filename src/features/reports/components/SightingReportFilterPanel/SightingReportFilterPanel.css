@@ -1,0 +1,39 @@
+.sighting-report-filter-panel {
+  display: grid;
+  gap: var(--space-5);
+  padding: var(--space-5);
+  border: var(--border-width-default) solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-bg);
+}
+.sighting-report-filter-panel__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+.sighting-report-filter-panel h3 {
+  margin: 0;
+  font-size: var(--font-size-md);
+}
+.sighting-report-filter-panel fieldset {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.sighting-report-filter-panel legend {
+  margin-bottom: var(--space-2);
+  font-weight: var(--font-weight-semibold);
+}
+.sighting-report-filter-panel__options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+@media (max-width: 380px) {
+  .sighting-report-filter-panel__header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

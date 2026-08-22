@@ -1,12 +1,13 @@
 .ds-badge {
   display: inline-flex;
   align-items: center;
-  padding: 2px 8px;
-  border-radius: 999px;
+  max-width: 100%;
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-full);
   background-color: var(--color-accent-soft);
   color: var(--color-text-primary);
   font-size: var(--font-size-xs);
-  font-weight: 600;
-  line-height: 1.4;
-  white-space: nowrap;
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-compact);
+  overflow-wrap: anywhere;
 }

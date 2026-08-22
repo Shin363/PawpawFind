@@ -26,8 +26,24 @@ PawpawFind의 foundation과 공용 UI 경계를 정의합니다. 구체적인 �
 - 이름이 특정 화면이나 컴포넌트에 종속되지 않는가?
 - 값이 바뀔 때 함께 바뀌어야 하는 소비자가 있는가?
 
-색상과 타이포그래피의 현재 source of truth는 `src/styles/tokens.css`입니다. spacing, radius, shadow는
-감사 문서의 후보일 뿐 아직 확정 토큰이 아닙니다.
+색상과 타이포그래피를 포함한 확정 token의 source of truth는 `src/styles/tokens.css`입니다.
+
+### 확정된 foundation token
+
+| 범주     | 이름과 값                                                                             | 사용 목적과 근거                                                          |
+| -------- | ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| disabled | `--color-disabled: #c3c8cf`                                                           | 와이어프레임의 비활성 pagination과 여러 control의 비활성 텍스트           |
+| control  | `--control-height: 44px`                                                              | Button medium, 입력, segmented option의 최소 키보드·터치 영역             |
+| border   | `--border-width-default: 1px`                                                         | control과 feature surface의 기본 구분선 두께                              |
+| type     | `--font-weight-semibold: 600`, `--line-height-compact: 1.4`                           | 선택 control과 label에서 반복되는 강조 굵기와 짧은 문구용 행간            |
+| spacing  | `--space-1/2/3/4/5/6/8: 4/8/12/16/20/24/32px`                                         | primitive 내부 간격과 feature surface에서 같은 의미로 반복되는 core scale |
+| radius   | `--radius-sm/md/lg/full: 8/12/16/999px`                                               | chip·pagination / button·input / panel / pill에서 반복되는 모서리         |
+| focus    | `--focus-outline: 3px solid var(--color-text-primary)`, `--focus-outline-offset: 2px` | 모든 interactive primitive의 일관된 `focus-visible` 표시                  |
+
+`10px` segmented option radius, 선택 shadow, hover surface, 숨긴 radio 크기는 해당 컴포넌트의
+CSS custom property로 관리한다. 같은 의미가 두 컴포넌트 이상에서 확인되지 않아 foundation token으로
+승격하지 않았다. Storybook preview 폭은 제품 layout token이 아니라 `.storybook/preview.css`의 명명된
+preview layout class로 관리한다.
 
 ### Primitive
 
@@ -70,6 +86,30 @@ PawpawFind의 foundation과 공용 UI 경계를 정의합니다. 구체적인 �
 
 작은 정적 helper까지 모두 spec으로 만들지는 않습니다.
 
+## 구현된 공용 primitive
+
+| Primitive        | 책임                                | 주요 지원 상태                                                   |
+| ---------------- | ----------------------------------- | ---------------------------------------------------------------- |
+| Button           | 제품 비종속 동작 실행               | primary/secondary, medium/large, hover, focus-visible, disabled  |
+| Badge            | 정적인 짧은 보조 정보               | 기본, 긴 문구 줄바꿈                                             |
+| SelectableChip   | 독립적인 선택 on/off                | selected/unselected, hover, focus-visible, disabled              |
+| SegmentedControl | 필수 단일 선택                      | selected/unselected, 전체·option disabled, native radio keyboard |
+| TextInput        | label·설명·오류가 연결된 한 줄 입력 | default/filled/disabled/required/help/invalid                    |
+
+공용 export는 각 컴포넌트 폴더의 `index.ts`에서 named export로만 제공한다.
+
+## 구현된 feature 컴포넌트
+
+목격 제보 문구와 데이터 의미를 아는 아래 컴포넌트는 `src/features/reports/components`에 둔다.
+
+- `SightingReportListItem`: 제보 한 건의 요약과 선택 가능한 상태
+- `SightingReportFilterPanel`: 도메인 필터 그룹과 초기화
+- `ActiveSightingReportFilters`: 적용된 필터 제거
+- `SightingReportPagination`: 목격 제보 목록의 페이지 이동
+
+현재 API 응답으로 바로 표현 가능한 목록 항목만 `ReportListPage`에 연결했다. 필터 query와 pagination
+조회 계약은 확정되지 않아 page/API 타입을 추측하지 않고 Storybook에서 독립 검증한다.
+
 ## 파일 구조
 
 ```text
@@ -111,6 +151,7 @@ src/
 ## Verification
 
 - spec과 구현의 props·상태가 일치하는가?
+- 지원하는 상태를 `*.stories.tsx`로 작성했는가?
 - native element와 heading 구조가 적절한가?
 - keyboard와 focus-visible을 확인했는가?
 - disabled와 loading 중 중복 동작이 차단되는가?
@@ -118,8 +159,9 @@ src/
 - 현재 화면의 시각 회귀가 없는가?
 - `pnpm verify`가 통과하는가?
 
-Storybook이나 시각 회귀 도구가 도입되기 전에는 기존 화면 또는 검토용 페이지에서 상태를 직접
-렌더링해 확인합니다.
+공용 UI는 Storybook에서 상태를 독립적으로 확인하고 Chromatic에서 시각 변경을 검토합니다. Storybook
+정적 빌드는 `pnpm verify`에 포함합니다. 새로운 시각 변경은 기준 이미지로 자동 승인하지 않고
+Chromatic에서 의도한 변경인지 확인합니다.
 
 ## 자동화 기준
 
