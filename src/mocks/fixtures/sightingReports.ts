@@ -1,4 +1,4 @@
-import type { SightingReportListResponse } from '@/features/reports/types'
+import type { SightingReportListResponse } from '@/features/sighting-reports/types'
 
 export const sightingReportsFixture: SightingReportListResponse = {
   items: [

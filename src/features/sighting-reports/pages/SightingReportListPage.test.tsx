@@ -3,22 +3,22 @@ import userEvent from '@testing-library/user-event'
 import { http, HttpResponse } from 'msw'
 import { describe, expect, it } from 'vitest'
 import { server } from '@/mocks/server'
-import { sightingReportsFixture } from '@/mocks/fixtures/reports'
+import { sightingReportsFixture } from '@/mocks/fixtures/sightingReports'
 import { renderWithQueryClient } from '@/test/render'
-import * as reportsApi from './api/reports.api'
-import { ReportListPage } from './ReportListPage'
+import * as sightingReportsApi from '../api/sightingReports.api'
+import { SightingReportListPage } from './SightingReportListPage'
 
-const { SIGHTING_REPORTS_API_PATH } = reportsApi
+const { SIGHTING_REPORTS_API_PATH } = sightingReportsApi
 
-describe('ReportListPage', () => {
+describe('SightingReportListPage', () => {
   it('요청 중에는 로딩 상태를 보여준다', () => {
-    renderWithQueryClient(<ReportListPage />)
+    renderWithQueryClient(<SightingReportListPage />)
 
     expect(screen.getByRole('status')).toHaveTextContent('목격 제보를 불러오는 중입니다.')
   })
 
   it('목격 제보 목록을 보여준다', async () => {
-    renderWithQueryClient(<ReportListPage />)
+    renderWithQueryClient(<SightingReportListPage />)
 
     expect(
       await screen.findByRole('heading', {
@@ -38,7 +38,7 @@ describe('ReportListPage', () => {
       ),
     )
 
-    renderWithQueryClient(<ReportListPage />)
+    renderWithQueryClient(<SightingReportListPage />)
 
     expect(await screen.findByText('등록된 목격 제보가 없습니다.')).toBeInTheDocument()
   })
@@ -57,7 +57,7 @@ describe('ReportListPage', () => {
     )
 
     const user = userEvent.setup()
-    renderWithQueryClient(<ReportListPage />)
+    renderWithQueryClient(<SightingReportListPage />)
 
     expect(await screen.findByRole('alert')).toHaveTextContent('목격 제보를 불러오지 못했습니다.')
 

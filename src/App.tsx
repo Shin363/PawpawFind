@@ -1,7 +1,7 @@
-import { ReportListPage } from '@/features/reports/ReportListPage'
+import { SightingReportListPage } from '@/features/sighting-reports'
 
 function App() {
-  return <ReportListPage />
+  return <SightingReportListPage />
 }
 
 export default App
