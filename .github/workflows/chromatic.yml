@@ -34,7 +34,10 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Publish Storybook to Chromatic
-        if: env.CHROMATIC_PROJECT_TOKEN != ''
+        if: >-
+          env.CHROMATIC_PROJECT_TOKEN != '' &&
+          (github.event_name != 'pull_request' ||
+          github.event.pull_request.head.repo.fork == false)
         uses: chromaui/action@v13
         with:
           projectToken: ${{ env.CHROMATIC_PROJECT_TOKEN }}

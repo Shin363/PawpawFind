@@ -94,10 +94,11 @@ Chromatic 배포를 사용하려면 Chromatic에서 이 GitHub 저장소의 프�
 CHROMATIC_PROJECT_TOKEN
 ```
 
-토큰은 소스 코드나 `.env` 파일에 저장하지 않습니다. secret이 등록된 뒤 PR과 `main` push에서
-Chromatic workflow가 Storybook을 배포하고 이전 기준 이미지와 시각 차이를 비교합니다. secret이
-없으면 배포 단계만 건너뛰므로 일반 CI와 `pnpm verify`에는 영향을 주지 않습니다. 새 snapshot은
-Chromatic 화면에서 의도한 변경인지 직접 확인한 뒤 승인합니다.
+토큰은 소스 코드나 `.env` 파일에 저장하지 않습니다. secret이 등록된 뒤 동일 저장소에서 만든 PR과
+`main` push에서 Chromatic workflow가 Storybook을 배포하고 이전 기준 이미지와 시각 차이를
+비교합니다. Fork 저장소에서 보낸 PR은 repository secret에 접근할 수 없으므로 배포 단계를
+건너뜁니다. secret이 없는 경우에도 배포 단계만 건너뛰므로 일반 CI와 `pnpm verify`에는 영향을 주지
+않습니다. 새 snapshot은 Chromatic 화면에서 의도한 변경인지 직접 확인한 뒤 승인합니다.
 
 ## 현재 UI 구조
 
