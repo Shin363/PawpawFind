@@ -37,21 +37,19 @@ function Content({ report }: { report: SightingReportListItemViewModel }) {
 }
 
 export function SightingReportListItem({ onSelect, report }: SightingReportListItemProps) {
-  if (onSelect) {
-    return (
-      <button
-        className="sighting-report-list-item sighting-report-list-item--interactive"
-        onClick={() => onSelect(report.id)}
-        type="button"
-      >
-        <Content report={report} />
-      </button>
-    )
-  }
-
   return (
-    <article className="sighting-report-list-item">
+    <article
+      className={`sighting-report-list-item${onSelect ? ' sighting-report-list-item--interactive' : ''}`}
+    >
       <Content report={report} />
+      {onSelect && (
+        <button
+          aria-label={`${report.title} 상세 보기`}
+          className="sighting-report-list-item__selection-control"
+          onClick={() => onSelect(report.id)}
+          type="button"
+        />
+      )}
     </article>
   )
 }

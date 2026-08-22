@@ -20,11 +20,23 @@ describe('SightingReportListItem', () => {
     expect(screen.getByRole('list', { name: '특징' })).toHaveTextContent('목줄 있음')
   })
 
-  it('선택 계약이 있으면 전체 항목을 버튼으로 제공한다', async () => {
+  it('선택 계약이 있어도 article 의미를 유지하고 별도 버튼을 제공한다', async () => {
     const onSelect = vi.fn()
     const user = userEvent.setup()
     render(<SightingReportListItem onSelect={onSelect} report={report} />)
-    await user.click(screen.getByRole('button', { name: /믹스견/ }))
-    expect(onSelect).toHaveBeenCalledWith('p1')
+
+    const article = screen.getByRole('article')
+    const button = screen.getByRole('button', { name: `${report.title} 상세 보기` })
+
+    expect(screen.getByRole('heading', { name: report.title })).toBeInTheDocument()
+    expect(article).toContainElement(button)
+
+    await user.click(button)
+    button.focus()
+    await user.keyboard('{Enter}')
+    await user.keyboard(' ')
+
+    expect(onSelect).toHaveBeenCalledTimes(3)
+    expect(onSelect).toHaveBeenNthCalledWith(1, 'p1')
   })
 })

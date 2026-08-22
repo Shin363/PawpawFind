@@ -2,9 +2,17 @@
 
 목격 제보 목록의 한 항목을 제목, 종류, 장소, 날짜, 특징 태그로 요약한다. API 타입을 늘리지 않고
 feature-local view model을 받는다. 상세 이동 계약이 있는 사용처만 `onSelect`를 전달하며, 그때 전체
-항목이 native button이 된다. 이미지 URL·오류 처리와 상세 route는 계약이 없어 제외한다.
+항목을 선택할 수 있는 별도 native button을 `article` 위에 배치한다. 제목, 메타데이터, 특징 목록은
+button 밖에 유지해 유효한 HTML 구조와 문서 의미를 보존한다. 선택 button의 접근 가능한 이름은 제보
+제목과 "상세 보기" 문구로 구성한다. 이미지 URL·오류 처리와 상세 route는 계약이 없어 제외한다.
 
 지원 상태: 기본, 긴 문구, 태그 유무, 선택 가능. loading/error/empty는 목록 화면의 책임이다.
+
+## 접근성과 키보드
+
+- 제보 한 건은 항상 `article`이며 제목은 heading, 특징은 list 의미를 유지한다.
+- `onSelect`가 있을 때만 전체 영역을 덮는 별도 native `button`을 제공한다.
+- 선택 button은 Enter와 Space로 실행할 수 있고 `focus-visible` outline을 표시한다.
 
 ## 근거
 
