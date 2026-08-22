@@ -2,7 +2,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding-inline: 16px;
+  padding-inline: var(--space-4);
   border: 1px solid transparent;
   font: inherit;
   font-weight: 600;
@@ -12,15 +12,15 @@
 }
 
 .ds-button--medium {
-  min-height: var(--touch-target-min);
-  padding-block: 8px;
-  border-radius: 8px;
+  min-height: var(--control-height);
+  padding-block: var(--space-2);
+  border-radius: var(--radius-sm);
 }
 
 .ds-button--large {
   min-height: var(--button-height-primary);
-  padding-block: 12px;
-  border-radius: 12px;
+  padding-block: var(--space-3);
+  border-radius: var(--radius-md);
 }
 
 .ds-button--primary {
@@ -43,13 +43,13 @@
 }
 
 .ds-button:focus-visible {
-  outline: 3px solid var(--color-text-primary);
-  outline-offset: 2px;
+  outline: var(--focus-outline);
+  outline-offset: var(--focus-outline-offset);
 }
 
 .ds-button:disabled {
   border-color: var(--color-border);
   background: var(--color-border);
-  color: var(--color-text-tertiary);
+  color: var(--color-disabled);
   cursor: not-allowed;
 }

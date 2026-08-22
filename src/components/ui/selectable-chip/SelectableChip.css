@@ -3,9 +3,9 @@
   align-items: center;
   justify-content: center;
   min-height: 36px;
-  padding: 6px 12px;
+  padding: 6px var(--space-3);
   border: 1px solid var(--color-border);
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   background: rgb(255 255 255 / 0.94);
   color: var(--color-text-secondary);
   font: inherit;
@@ -31,11 +31,13 @@
 }
 
 .ds-selectable-chip:focus-visible {
-  outline: 3px solid var(--color-text-primary);
-  outline-offset: 2px;
+  outline: var(--focus-outline);
+  outline-offset: var(--focus-outline-offset);
 }
 
 .ds-selectable-chip:disabled {
   cursor: not-allowed;
-  opacity: 0.55;
+  border-color: var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-disabled);
 }

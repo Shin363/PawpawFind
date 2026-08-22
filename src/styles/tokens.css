@@ -18,6 +18,7 @@
   --color-accent-soft: #fef3e2;
   /* 로그아웃 등 파괴적 동작 전용 */
   --color-danger: #dc2626;
+  --color-disabled: #c3c8cf;
 
   /* accent 위 글자는 항상 primary 텍스트 색을 쓴다 */
   --color-on-accent: var(--color-text-primary);
@@ -41,4 +42,24 @@
   --content-max-width: 1180px;
   --touch-target-min: 44px;
   --button-height-primary: 52px;
+  --control-height: 44px;
+
+  /* Spacing: 반복되는 control 내부 간격과 feature surface 배치 */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+
+  /* Radius */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-full: 999px;
+
+  /* Focus */
+  --focus-outline: 3px solid var(--color-text-primary);
+  --focus-outline-offset: 2px;
 }

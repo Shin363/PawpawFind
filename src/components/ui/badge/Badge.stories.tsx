@@ -19,4 +19,11 @@ export const LongLabel = {
   args: {
     children: '보호소에서 보호 중',
   },
+  decorators: [
+    (Story) => (
+      <div style={{ width: 140 }}>
+        <Story />
+      </div>
+    ),
+  ],
 } satisfies Story

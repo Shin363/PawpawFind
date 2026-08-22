@@ -39,3 +39,16 @@ export const States = {
     </div>
   ),
 } satisfies Story
+
+export const LongLabelNarrowWidth = {
+  args: {
+    children: '빨간색 하네스를 착용하고 있어요',
+  },
+  decorators: [
+    (Story) => (
+      <div style={{ width: 180 }}>
+        <Story />
+      </div>
+    ),
+  ],
+} satisfies Story

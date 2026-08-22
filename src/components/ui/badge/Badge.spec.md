@@ -9,6 +9,7 @@
 ```ts
 interface BadgeProps {
   children: React.ReactNode
+  className?: string
 }
 ```
 
@@ -22,6 +23,10 @@ interface BadgeProps {
 - label: `children` 텍스트 자체가 라벨
 - keyboard: 상호작용 없음, 포커스 대상 아님
 - focus-visible: 해당 없음
+
+## 반응형
+
+- 좁은 부모 안에서 긴 라벨이 잘리지 않고 줄바꿈된다.
 
 ## 참고
 
