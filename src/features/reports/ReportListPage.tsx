@@ -1,5 +1,5 @@
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { SightingReportListItem } from './components/SightingReportListItem'
 import { useSightingReportsQuery } from './hooks/useSightingReportsQuery'
 import './ReportListPage.css'
 
@@ -34,15 +34,7 @@ export function ReportListPage() {
           <ul className="report-list">
             {reports.map((report) => (
               <li key={report.id}>
-                <article className="report-card">
-                  <div className="report-card__badges">
-                    <Badge>목격 제보</Badge>
-                    <Badge>{report.speciesLabel}</Badge>
-                  </div>
-                  <h3>{report.title}</h3>
-                  <p>{report.areaText}</p>
-                  <p>{report.dateText}</p>
-                </article>
+                <SightingReportListItem report={report} />
               </li>
             ))}
           </ul>
