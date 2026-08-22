@@ -38,11 +38,15 @@
   --font-size-info-secondary: var(--font-size-sm);
   --font-size-info-tertiary: var(--font-size-xs);
 
+  --font-weight-semibold: 600;
+  --line-height-compact: 1.4;
+
   /* Layout */
   --content-max-width: 1180px;
   --touch-target-min: 44px;
   --button-height-primary: 52px;
   --control-height: 44px;
+  --border-width-default: 1px;
 
   /* Spacing: 반복되는 control 내부 간격과 feature surface 배치 */
   --space-1: 4px;

@@ -34,12 +34,16 @@ PawpawFind의 foundation과 공용 UI 경계를 정의합니다. 구체적인 �
 | -------- | ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
 | disabled | `--color-disabled: #c3c8cf`                                                           | 와이어프레임의 비활성 pagination과 여러 control의 비활성 텍스트           |
 | control  | `--control-height: 44px`                                                              | Button medium, 입력, segmented option의 최소 키보드·터치 영역             |
+| border   | `--border-width-default: 1px`                                                         | control과 feature surface의 기본 구분선 두께                              |
+| type     | `--font-weight-semibold: 600`, `--line-height-compact: 1.4`                           | 선택 control과 label에서 반복되는 강조 굵기와 짧은 문구용 행간            |
 | spacing  | `--space-1/2/3/4/5/6/8: 4/8/12/16/20/24/32px`                                         | primitive 내부 간격과 feature surface에서 같은 의미로 반복되는 core scale |
 | radius   | `--radius-sm/md/lg/full: 8/12/16/999px`                                               | chip·pagination / button·input / panel / pill에서 반복되는 모서리         |
 | focus    | `--focus-outline: 3px solid var(--color-text-primary)`, `--focus-outline-offset: 2px` | 모든 interactive primitive의 일관된 `focus-visible` 표시                  |
 
-`10px` segmented option radius와 shadow 값은 해당 컴포넌트에만 유지한다. 같은 elevation 의미가 두
-컴포넌트 이상에서 확인되지 않아 shadow token은 아직 만들지 않았다.
+`10px` segmented option radius, 선택 shadow, hover surface, 숨긴 radio 크기는 해당 컴포넌트의
+CSS custom property로 관리한다. 같은 의미가 두 컴포넌트 이상에서 확인되지 않아 foundation token으로
+승격하지 않았다. Storybook preview 폭은 제품 layout token이 아니라 `.storybook/preview.css`의 명명된
+preview layout class로 관리한다.
 
 ### Primitive
 

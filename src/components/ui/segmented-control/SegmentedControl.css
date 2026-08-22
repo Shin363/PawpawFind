@@ -1,4 +1,9 @@
 .ds-segmented-control {
+  --segmented-control-hidden-radio-size: 1px;
+  --segmented-control-option-radius: 10px;
+  --segmented-control-hover-background: rgb(255 255 255 / 0.6);
+  --segmented-control-selected-shadow: 0 1px 3px rgb(17 24 39 / 0.08);
+
   display: flex;
   gap: var(--space-1);
   width: 100%;
@@ -16,8 +21,8 @@
 
 .ds-segmented-control__option input {
   position: absolute;
-  width: 1px;
-  height: 1px;
+  width: var(--segmented-control-hidden-radio-size);
+  height: var(--segmented-control-hidden-radio-size);
   opacity: 0;
 }
 
@@ -27,22 +32,22 @@
   justify-content: center;
   min-height: var(--control-height);
   padding: var(--space-2) var(--space-3);
-  border-radius: 10px;
+  border-radius: var(--segmented-control-option-radius);
   color: var(--color-text-secondary);
-  font-weight: 600;
-  line-height: 1.4;
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-compact);
   text-align: center;
   overflow-wrap: anywhere;
 }
 
 .ds-segmented-control__option:hover input:not(:disabled):not(:checked) + span {
-  background: rgb(255 255 255 / 0.6);
+  background: var(--segmented-control-hover-background);
 }
 
 .ds-segmented-control__option input:checked + span {
   background: var(--color-bg);
   color: var(--color-text-primary);
-  box-shadow: 0 1px 3px rgb(17 24 39 / 0.08);
+  box-shadow: var(--segmented-control-selected-shadow);
 }
 
 .ds-segmented-control__option input:focus-visible + span {

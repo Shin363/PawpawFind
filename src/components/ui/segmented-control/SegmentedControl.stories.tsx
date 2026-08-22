@@ -31,7 +31,7 @@ const meta = {
   },
   decorators: [
     (Story) => (
-      <div style={{ width: 360, maxWidth: '100%' }}>
+      <div className="sb-preview-width-control">
         <Story />
       </div>
     ),
@@ -61,7 +61,7 @@ export const LongLabelsNarrowWidth = {
   },
   decorators: [
     (Story) => (
-      <div style={{ width: 240 }}>
+      <div className="sb-preview-width-narrow">
         <Story />
       </div>
     ),

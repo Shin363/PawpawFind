@@ -3,10 +3,10 @@
   align-items: center;
   justify-content: center;
   padding-inline: var(--space-4);
-  border: 1px solid transparent;
+  border: var(--border-width-default) solid transparent;
   font: inherit;
-  font-weight: 600;
-  line-height: 1.4;
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-compact);
   text-align: center;
   cursor: pointer;
 }

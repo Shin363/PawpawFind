@@ -46,6 +46,12 @@ interface SegmentedControlProps<Value extends string> {
 - option은 같은 너비로 늘어나며 긴 문구는 줄바꿈한다.
 - API, route, analytics, 제품 문구, 폼 제출은 다루지 않는다.
 
+## 시각 토큰
+
+- 반복되는 테두리 두께, 글꼴 굵기, compact line-height는 foundation token을 사용한다.
+- option의 `10px` radius, 선택 shadow, hover surface, 화면에서 숨긴 radio 크기는 다른 컴포넌트와
+  같은 의미의 반복이 확인되지 않아 컴포넌트 전용 CSS custom property로 관리한다.
+
 ## 근거
 
 - 저장소 근거: `docs/design-audit.md`의 "Primitive 후보"와 "화면과 상태 인벤토리" 섹션
