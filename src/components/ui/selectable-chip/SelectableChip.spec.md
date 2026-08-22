@@ -54,6 +54,8 @@ interface SelectableChipProps extends Omit<
 
 ## 참고
 
-- 와이어프레임/Figma 링크: https://claude.ai/design/p/6c5747a2-9eae-4016-a2e5-b6a049902736
+- 저장소 근거: `docs/design-audit.md`의 "Primitive 후보"와 "화면과 상태 인벤토리" 섹션
 - 반복 근거: 목록 필터, 동물 특징, 결과 출처 선택
 - 디자인 근거: `CHIP_ON`, `CHIP_OFF` 상태
+- 원본 와이어프레임의 파일명과 무결성 정보는 `docs/design-audit.md`의 "조사 대상과 한계"에서
+  관리한다.

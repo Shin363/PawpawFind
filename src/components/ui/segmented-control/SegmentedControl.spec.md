@@ -48,4 +48,7 @@ interface SegmentedControlProps<Value extends string> {
 
 ## 근거
 
-- 와이어프레임의 제보 등록과 우리 아이 찾기에서 동물 종류·크기 단일 선택이 반복된다.
+- 저장소 근거: `docs/design-audit.md`의 "Primitive 후보"와 "화면과 상태 인벤토리" 섹션
+- 반복 근거: 제보 등록과 우리 아이 찾기에서 동물 종류·크기 단일 선택이 반복된다.
+- 원본 와이어프레임의 파일명과 무결성 정보는 `docs/design-audit.md`의 "조사 대상과 한계"에서
+  관리한다.

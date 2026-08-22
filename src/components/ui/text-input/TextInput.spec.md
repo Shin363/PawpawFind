@@ -38,4 +38,8 @@ interface TextInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 
 ## 근거
 
-- 와이어프레임의 제보 제목과 마이페이지 닉네임 입력.
+- 저장소 근거: `docs/design-audit.md`의 "Primitive 후보", "화면과 상태 인벤토리", "누락되거나
+  불명확한 상태" 섹션
+- 반복 근거: 제보 제목과 마이페이지 닉네임 입력
+- 원본 와이어프레임의 파일명과 무결성 정보는 `docs/design-audit.md`의 "조사 대상과 한계"에서
+  관리한다.

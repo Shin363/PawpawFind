@@ -50,6 +50,8 @@ interface ButtonProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>
 
 ## 참고
 
-- 와이어프레임/Figma 링크: https://claude.ai/design/p/6c5747a2-9eae-4016-a2e5-b6a049902736
+- 저장소 근거: `docs/design-audit.md`의 "Primitive 후보"와 "화면과 상태 인벤토리" 섹션
 - 반복 근거: 제보 등록 CTA, 닉네임 저장·취소, 오류 재시도 등
-- 참고한 기존 컴포넌트: `src/components/Button.tsx`, 목격 제보 목록의 다시 시도 버튼
+- 현재 사용처: 목격 제보 목록의 다시 시도 버튼과 feature 컴포넌트의 보조 행동
+- 원본 와이어프레임의 파일명과 무결성 정보는 `docs/design-audit.md`의 "조사 대상과 한계"에서
+  관리한다.

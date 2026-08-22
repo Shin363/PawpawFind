@@ -30,7 +30,10 @@ interface BadgeProps {
 
 ## 참고
 
-- 와이어프레임/Figma 링크: https://claude.ai/design/p/6c5747a2-9eae-4016-a2e5-b6a049902736
-- 근거: 기능명세서 3.2 "연한 포인트(#FEF3E2) — 배지, 선택된 보조 칩" / MTR 유사도 구간 라벨 / SGD·CDD 출처 배지
+- 저장소 근거: `docs/design-audit.md`의 "Color", "Primitive 후보", "Feature 컴포넌트 인벤토리"
+  섹션
+- 반복 근거: 목격 제보·보호소 출처와 유사 동물 결과의 보조 라벨
 - 색상 variant를 두지 않는다: 명세서에 유사도 구간별 배지 색상 차이가 정의돼 있지 않으므로,
   구간별 시각 구분이 필요해지면 그때 근거를 확인하고 추가한다.
+- 원본 와이어프레임의 파일명과 무결성 정보는 `docs/design-audit.md`의 "조사 대상과 한계"에서
+  관리한다.
