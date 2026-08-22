@@ -7,6 +7,7 @@
 ### 현재 적용
 
 - React 18
+- React Router 7
 - TypeScript
 - Vite
 - pnpm
@@ -26,7 +27,6 @@
 
 ### 도입 예정
 
-- React Router
 - React Hook Form
 - Zod
 - Playwright
@@ -104,9 +104,10 @@ CHROMATIC_PROJECT_TOKEN
 
 - Foundation token: `src/styles/tokens.css`
 - 공용 primitive: `src/components/ui`의 Button, Badge, SelectableChip, SegmentedControl, TextInput
-- 목격 제보 목록 UI: `src/features/reports/components`의 목록 항목, 필터 panel, 적용 필터,
+- 목격 제보 목록 UI: `src/features/sighting-reports/components`의 목록 항목, 필터 panel, 적용 필터,
   pagination
 
-공용 primitive는 제품 데이터나 API를 모르며, 목격 제보 문구와 흐름을 아는 UI는 reports feature에
-둡니다. 자세한 승격 기준과 지원 상태는 `docs/design-system.md`, 와이어프레임 근거와 보류 항목은
+공용 primitive는 제품 데이터나 API를 모르며, 목격 제보 문구와 흐름을 아는 UI는
+`sighting-reports`, 실종 동물 찾기 흐름은 `missing-animal-search` feature에 둡니다. 자세한 승격
+기준과 지원 상태는 `docs/design-system.md`, 와이어프레임 근거와 보류 항목은
 `docs/design-audit.md`를 참고합니다.

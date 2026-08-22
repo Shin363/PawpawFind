@@ -60,7 +60,8 @@ src/
 ## 현재 Mock 계약
 
 백엔드 API 명세가 확정되기 전까지 목격 제보 목록은 다음 임시 계약을 사용합니다. 이 경로와 응답은
-프론트엔드 개발을 위한 mock 경계이며, 서버 계약이 확정되면 `src/features/reports/api`의 경로와 타입,
+프론트엔드 개발을 위한 mock 경계이며, 서버 계약이 확정되면
+`src/features/sighting-reports/api`의 경로와 타입,
 MSW handler를 함께 변경합니다.
 
 ```text
