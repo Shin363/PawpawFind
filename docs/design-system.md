@@ -100,15 +100,16 @@ preview layout class로 관리한다.
 
 ## 구현된 feature 컴포넌트
 
-목격 제보 문구와 데이터 의미를 아는 아래 컴포넌트는 `src/features/reports/components`에 둔다.
+목격 제보 문구와 데이터 의미를 아는 아래 컴포넌트는
+`src/features/sighting-reports/components`에 둔다.
 
 - `SightingReportListItem`: 제보 한 건의 요약과 선택 가능한 상태
 - `SightingReportFilterPanel`: 도메인 필터 그룹과 초기화
 - `ActiveSightingReportFilters`: 적용된 필터 제거
 - `SightingReportPagination`: 목격 제보 목록의 페이지 이동
 
-현재 API 응답으로 바로 표현 가능한 목록 항목만 `ReportListPage`에 연결했다. 필터 query와 pagination
-조회 계약은 확정되지 않아 page/API 타입을 추측하지 않고 Storybook에서 독립 검증한다.
+현재 API 응답으로 바로 표현 가능한 목록 항목만 `SightingReportListPage`에 연결했다. 필터 query와
+pagination 조회 계약은 확정되지 않아 page/API 타입을 추측하지 않고 Storybook에서 독립 검증한다.
 
 ## 파일 구조
 

@@ -1,9 +1,9 @@
 import { Button } from '@/components/ui/button'
-import { SightingReportListItem } from './components/SightingReportListItem'
-import { useSightingReportsQuery } from './hooks/useSightingReportsQuery'
-import './ReportListPage.css'
+import { SightingReportListItem } from '../components/SightingReportListItem'
+import { useSightingReportsQuery } from '../hooks/useSightingReportsQuery'
+import './SightingReportListPage.css'
 
-export function ReportListPage() {
+export function SightingReportListPage() {
   const { data, isError, isPending, refetch } = useSightingReportsQuery()
   const reports = data?.items ?? []
 

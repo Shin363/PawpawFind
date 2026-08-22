@@ -1,3 +1,3 @@
-import { reportsHandlers } from './reports'
+import { sightingReportsHandlers } from './sightingReports'
 
-export const handlers = [...reportsHandlers]
+export const handlers = [...sightingReportsHandlers]
