@@ -80,7 +80,8 @@ pnpm dev
 
 ## Storybook과 Chromatic
 
-공용 UI의 지원 상태는 Storybook에서 독립적으로 확인합니다.
+공용 UI와 아직 페이지 계약에 연결되지 않은 feature UI의 지원 상태는 Storybook에서 독립적으로
+확인합니다. 전역 `tokens.css`는 `styles.css`를 통해 앱과 Storybook에 동일하게 적용됩니다.
 
 ```bash
 pnpm storybook
@@ -93,5 +94,18 @@ Chromatic 배포를 사용하려면 Chromatic에서 이 GitHub 저장소의 프�
 CHROMATIC_PROJECT_TOKEN
 ```
 
-토큰은 소스 코드나 `.env` 파일에 저장하지 않습니다. PR과 `main` push에서 Chromatic workflow가
-Storybook을 배포하고 이전 기준 이미지와 시각 차이를 비교합니다.
+토큰은 소스 코드나 `.env` 파일에 저장하지 않습니다. secret이 등록된 뒤 PR과 `main` push에서
+Chromatic workflow가 Storybook을 배포하고 이전 기준 이미지와 시각 차이를 비교합니다. secret이
+없으면 배포 단계만 건너뛰므로 일반 CI와 `pnpm verify`에는 영향을 주지 않습니다. 새 snapshot은
+Chromatic 화면에서 의도한 변경인지 직접 확인한 뒤 승인합니다.
+
+## 현재 UI 구조
+
+- Foundation token: `src/styles/tokens.css`
+- 공용 primitive: `src/components/ui`의 Button, Badge, SelectableChip, SegmentedControl, TextInput
+- 목격 제보 목록 UI: `src/features/reports/components`의 목록 항목, 필터 panel, 적용 필터,
+  pagination
+
+공용 primitive는 제품 데이터나 API를 모르며, 목격 제보 문구와 흐름을 아는 UI는 reports feature에
+둡니다. 자세한 승격 기준과 지원 상태는 `docs/design-system.md`, 와이어프레임 근거와 보류 항목은
+`docs/design-audit.md`를 참고합니다.

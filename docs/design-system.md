@@ -26,8 +26,20 @@ PawpawFind의 foundation과 공용 UI 경계를 정의합니다. 구체적인 �
 - 이름이 특정 화면이나 컴포넌트에 종속되지 않는가?
 - 값이 바뀔 때 함께 바뀌어야 하는 소비자가 있는가?
 
-색상과 타이포그래피의 현재 source of truth는 `src/styles/tokens.css`입니다. spacing, radius, shadow는
-감사 문서의 후보일 뿐 아직 확정 토큰이 아닙니다.
+색상과 타이포그래피를 포함한 확정 token의 source of truth는 `src/styles/tokens.css`입니다.
+
+### 확정된 foundation token
+
+| 범주     | 이름과 값                                                                             | 사용 목적과 근거                                                          |
+| -------- | ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| disabled | `--color-disabled: #c3c8cf`                                                           | 와이어프레임의 비활성 pagination과 여러 control의 비활성 텍스트           |
+| control  | `--control-height: 44px`                                                              | Button medium, 입력, segmented option의 최소 키보드·터치 영역             |
+| spacing  | `--space-1/2/3/4/5/6/8: 4/8/12/16/20/24/32px`                                         | primitive 내부 간격과 feature surface에서 같은 의미로 반복되는 core scale |
+| radius   | `--radius-sm/md/lg/full: 8/12/16/999px`                                               | chip·pagination / button·input / panel / pill에서 반복되는 모서리         |
+| focus    | `--focus-outline: 3px solid var(--color-text-primary)`, `--focus-outline-offset: 2px` | 모든 interactive primitive의 일관된 `focus-visible` 표시                  |
+
+`10px` segmented option radius와 shadow 값은 해당 컴포넌트에만 유지한다. 같은 elevation 의미가 두
+컴포넌트 이상에서 확인되지 않아 shadow token은 아직 만들지 않았다.
 
 ### Primitive
 
@@ -69,6 +81,30 @@ PawpawFind의 foundation과 공용 UI 경계를 정의합니다. 구체적인 �
 - 근거가 된 화면 또는 기존 사용처
 
 작은 정적 helper까지 모두 spec으로 만들지는 않습니다.
+
+## 구현된 공용 primitive
+
+| Primitive        | 책임                                | 주요 지원 상태                                                   |
+| ---------------- | ----------------------------------- | ---------------------------------------------------------------- |
+| Button           | 제품 비종속 동작 실행               | primary/secondary, medium/large, hover, focus-visible, disabled  |
+| Badge            | 정적인 짧은 보조 정보               | 기본, 긴 문구 줄바꿈                                             |
+| SelectableChip   | 독립적인 선택 on/off                | selected/unselected, hover, focus-visible, disabled              |
+| SegmentedControl | 필수 단일 선택                      | selected/unselected, 전체·option disabled, native radio keyboard |
+| TextInput        | label·설명·오류가 연결된 한 줄 입력 | default/filled/disabled/required/help/invalid                    |
+
+공용 export는 각 컴포넌트 폴더의 `index.ts`에서 named export로만 제공한다.
+
+## 구현된 feature 컴포넌트
+
+목격 제보 문구와 데이터 의미를 아는 아래 컴포넌트는 `src/features/reports/components`에 둔다.
+
+- `SightingReportListItem`: 제보 한 건의 요약과 선택 가능한 상태
+- `SightingReportFilterPanel`: 도메인 필터 그룹과 초기화
+- `ActiveSightingReportFilters`: 적용된 필터 제거
+- `SightingReportPagination`: 목격 제보 목록의 페이지 이동
+
+현재 API 응답으로 바로 표현 가능한 목록 항목만 `ReportListPage`에 연결했다. 필터 query와 pagination
+조회 계약은 확정되지 않아 page/API 타입을 추측하지 않고 Storybook에서 독립 검증한다.
 
 ## 파일 구조
 
