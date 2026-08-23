@@ -22,6 +22,13 @@ describe('appRoutes', () => {
     expect(screen.getByRole('heading', { name: '목격 제보 목록' })).toBeInTheDocument()
   })
 
+  it('목격 제보 입력 폼을 공개 경로로 렌더링한다', () => {
+    renderRoute('/sightings/new')
+    expect(
+      screen.getByRole('heading', { name: '목격한 동물의 사진을 올려주세요' }),
+    ).toBeInTheDocument()
+  })
+
   it('목격 제보 상세 route parameter를 전달한다', () => {
     renderRoute('/sightings/report-1')
     expect(screen.getByRole('heading', { name: '목격 제보 상세' })).toBeInTheDocument()
