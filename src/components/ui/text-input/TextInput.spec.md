@@ -23,13 +23,16 @@ interface TextInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 
 - [x] default, filled, disabled, required
 - [x] help text, invalid/error message
+- [x] hover는 별도 색상 변화 없이 default 테두리를 유지
 - [ ] icon slot, password 보기, 검색 지우기: 와이어프레임 근거가 없어 제외한다.
 
 ## 접근성과 키보드
 
 - `label[for]`와 `input[id]`를 연결한다.
 - 설명과 오류는 `aria-describedby`로 연결하며 오류가 있으면 `aria-invalid=true`를 전달한다.
-- native text input의 키보드와 focus 동작을 유지하고 focus-visible outline을 표시한다.
+- native text input의 키보드와 focus 동작을 유지한다.
+- `focus-visible`에는 기본 3px 전역 outline보다 얇은 2px outline을 사용하고, accent와 배경을
+  섞은 연한 색으로 입력 위치를 표시한다.
 
 ## 반응형과 범위 밖
 

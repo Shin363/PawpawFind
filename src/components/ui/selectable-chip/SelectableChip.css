@@ -20,14 +20,14 @@
 
 .ds-selectable-chip[aria-pressed='true'] {
   border-color: var(--color-accent);
-  background: var(--color-accent);
-  color: var(--color-on-accent);
+  background: var(--color-accent-soft);
+  color: var(--color-text-primary);
   font-weight: var(--font-weight-semibold);
-  box-shadow: 0 2px 12px rgb(17 24 39 / 0.12);
 }
 
 .ds-selectable-chip[aria-pressed='true']:hover:not(:disabled) {
-  background: #e08c05;
+  border-color: #e08c05;
+  background: var(--color-accent-soft);
 }
 
 .ds-selectable-chip:focus-visible {

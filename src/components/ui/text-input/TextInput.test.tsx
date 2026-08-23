@@ -39,4 +39,13 @@ describe('TextInput', () => {
     render(<TextInput disabled label="닉네임" value="포포지기" readOnly />)
     expect(screen.getByRole('textbox', { name: '닉네임' })).toBeDisabled()
   })
+
+  it('키보드로 focus할 수 있다', async () => {
+    const user = userEvent.setup()
+    render(<TextInput label="제보 제목" />)
+
+    await user.tab()
+
+    expect(screen.getByRole('textbox', { name: '제보 제목' })).toHaveFocus()
+  })
 })
