@@ -1,12 +1,14 @@
-import { Badge } from '@/components/ui/badge'
 import './SightingReportListItem.css'
 
 interface SightingReportListItemViewModel {
   id: string
   title: string
   speciesLabel: string
+  colorText?: string
+  sizeLabel?: string
   areaText: string
   dateText: string
+  thumbnailUrl?: string
   tags?: readonly string[]
 }
 
@@ -18,20 +20,41 @@ interface SightingReportListItemProps {
 function Content({ report }: { report: SightingReportListItemViewModel }) {
   return (
     <>
-      <div className="sighting-report-list-item__heading">
-        <Badge>목격 제보</Badge>
-        <Badge>{report.speciesLabel}</Badge>
+      <div className="sighting-report-list-item__thumbnail">
+        {report.thumbnailUrl ? (
+          <img alt="" src={report.thumbnailUrl} />
+        ) : (
+          <span aria-hidden="true">🐾</span>
+        )}
       </div>
-      <h3>{report.title}</h3>
-      <p className="sighting-report-list-item__meta">{report.areaText}</p>
-      <p className="sighting-report-list-item__meta">{report.dateText}</p>
-      {report.tags && report.tags.length > 0 && (
-        <ul aria-label="특징" className="sighting-report-list-item__tags">
-          {report.tags.map((tag) => (
-            <li key={tag}>{tag}</li>
-          ))}
-        </ul>
-      )}
+      <div className="sighting-report-list-item__content">
+        <h3>{report.title}</h3>
+        <p className="sighting-report-list-item__summary">
+          {[report.speciesLabel, report.colorText, report.sizeLabel].filter(Boolean).join(' · ')}
+        </p>
+        <div className="sighting-report-list-item__meta">
+          <span>
+            <svg aria-hidden="true" viewBox="0 0 24 24">
+              <path d="M12 2.5a7 7 0 0 0-7 7c0 5.25 7 12 7 12s7-6.75 7-12a7 7 0 0 0-7-7Zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5Z" />
+            </svg>
+            {report.areaText}
+          </span>
+          <span>
+            <svg aria-hidden="true" fill="none" viewBox="0 0 24 24">
+              <rect height="16" rx="2.5" width="18" x="3" y="5" />
+              <path d="M8 3v4M16 3v4M3 10h18" />
+            </svg>
+            {report.dateText}
+          </span>
+        </div>
+        {report.tags && report.tags.length > 0 && (
+          <ul aria-label="특징" className="sighting-report-list-item__tags">
+            {report.tags.map((tag) => (
+              <li key={tag}>{tag}</li>
+            ))}
+          </ul>
+        )}
+      </div>
     </>
   )
 }
