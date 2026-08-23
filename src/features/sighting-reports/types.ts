@@ -30,6 +30,7 @@ export interface ReportListApiItem {
   status: string
   createdAt: string
   updatedAt: string
+  thumbnailUrl?: string
 }
 
 interface ReportPageSort {

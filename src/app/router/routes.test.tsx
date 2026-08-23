@@ -38,8 +38,10 @@ describe('appRoutes', () => {
     ).toBeInTheDocument()
 
     await user.click(screen.getByRole('button', { name: '다음 사진' }))
-    expect(screen.getByText('2 / 3')).toBeInTheDocument()
-    expect(screen.getByText('제보 사진 2')).toBeInTheDocument()
+    expect(screen.getByText('2 / 2')).toBeInTheDocument()
+    expect(
+      screen.getByRole('img', { name: '주황색과 흰색 무늬가 있는 고양이 예시 사진' }),
+    ).toBeInTheDocument()
   })
 
   it('미인증 사용자를 보호 경로에서 홈으로 이동시키고 목적지를 보존한다', async () => {

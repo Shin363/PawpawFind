@@ -21,6 +21,7 @@ export function toSightingReportListItem(report: ReportListApiItem): SightingRep
     sizeLabel: sizeLabels[report.size] ?? report.size,
     areaText: report.happenPlace,
     dateText: report.eventDate.replace(/-/g, '.'),
+    thumbnailUrl: report.thumbnailUrl,
   }
 }
 

@@ -3,6 +3,8 @@ import type {
   ReportListApiResponse,
   SightingReportDetail,
 } from '@/features/sighting-reports/types'
+import sampleCatImage from '@/assets/sighting-report-mocks/sample-cat.png'
+import sampleDogImage from '@/assets/sighting-report-mocks/sample-dog.png'
 
 const reportSeeds = [
   ['연남동 골목에서 갈색 중형견 봤어요', 'DOG', 'MEDIUM', '서울 마포구 연남동', 15],
@@ -41,6 +43,7 @@ export const sightingReportApiItems: ReportListApiItem[] = reportSeeds.map(
       status: 'OPEN',
       createdAt: `2026-08-${day}T12:00:00.000Z`,
       updatedAt: `2026-08-${day}T12:00:00.000Z`,
+      thumbnailUrl: species === 'DOG' ? sampleDogImage : sampleCatImage,
     }
   },
 )
@@ -89,7 +92,18 @@ export const sightingReportDetailsFixture: Record<string, SightingReportDetail> 
     coatLengthLabel: '중간',
     wearingText: '목줄 없음',
     behaviorText: '겁이 많음',
-    photos: [],
+    photos: [
+      {
+        id: 'photo-1',
+        url: sampleDogImage,
+        alt: '주황색과 흰색 무늬가 있는 강아지 예시 사진',
+      },
+      {
+        id: 'photo-2',
+        url: sampleCatImage,
+        alt: '주황색과 흰색 무늬가 있는 고양이 예시 사진',
+      },
+    ],
     location: { lat: 37.5621, lng: 126.9253, radiusM: 300 },
     predictedRoute: [
       {
