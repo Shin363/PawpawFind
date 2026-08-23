@@ -1,4 +1,6 @@
 .report-location-picker {
+  --report-location-control-shadow: 0 2px 6px rgb(22 24 29 / 0.12);
+
   display: grid;
   gap: var(--space-4);
   min-width: 0;
@@ -14,6 +16,19 @@
   color: var(--color-text-tertiary);
   font-size: var(--font-size-xs);
   line-height: 1.5;
+}
+
+.report-location-picker__status {
+  min-height: 1.5em;
+  margin: var(--space-1) 0 0;
+  color: var(--color-text-tertiary);
+  font-size: var(--font-size-xs);
+  line-height: 1.5;
+}
+
+.report-location-picker__status--highlight {
+  color: var(--color-accent-text);
+  font-weight: var(--font-weight-semibold);
 }
 
 .report-location-picker__map {
@@ -59,7 +74,6 @@
   transform: translate(-50%, -50%);
 }
 
-.report-location-picker__map-guide,
 .report-location-picker__map-address {
   position: absolute;
   z-index: 2;
@@ -72,11 +86,42 @@
   pointer-events: none;
 }
 
-.report-location-picker__map-guide {
-  top: var(--space-3);
-  left: var(--space-3);
+.report-location-picker__current-location {
+  position: absolute;
+  z-index: 3;
+  right: var(--space-3);
+  bottom: var(--space-3);
+  display: grid;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  place-items: center;
+  border: var(--border-width-default) solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: rgb(255 255 255 / 0.94);
   color: var(--color-text-secondary);
-  font-size: var(--font-size-xs);
+  box-shadow: var(--report-location-control-shadow);
+  cursor: pointer;
+}
+
+.report-location-picker__current-location svg {
+  width: 1.375rem;
+  height: 1.375rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.75;
+}
+
+.report-location-picker__current-location:focus-visible {
+  outline: var(--focus-outline);
+  outline-offset: var(--focus-outline-offset);
+}
+
+.report-location-picker__current-location:disabled {
+  color: var(--color-disabled);
+  cursor: not-allowed;
 }
 
 .report-location-picker__map-address {
@@ -209,32 +254,8 @@
   font-size: var(--font-size-sm);
 }
 
-.report-location-picker__coordinate-details {
-  color: var(--color-text-tertiary);
-  font-size: var(--font-size-xs);
-}
-
-.report-location-picker__coordinate-details summary {
-  width: fit-content;
-  cursor: pointer;
-}
-
-.report-location-picker__coordinate-details[open] summary {
-  margin-bottom: var(--space-3);
-}
-
-.report-location-picker__coordinate-fields {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--space-3);
-}
-
 @media (max-width: 40rem) {
   .report-location-picker__map {
     height: 14rem;
-  }
-
-  .report-location-picker__coordinate-fields {
-    grid-template-columns: 1fr;
   }
 }

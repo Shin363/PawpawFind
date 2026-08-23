@@ -1,11 +1,15 @@
 import { useEffect, useId, useRef, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { TextInput } from '@/components/ui/text-input'
+import { DEFAULT_REPORT_LOCATION } from '@/types/report'
 import { loadKakaoMaps } from '../../kakao/loadKakaoMaps'
 import type { KakaoMap, KakaoMapsApi } from '../../kakao/kakaoMaps.types'
 import './ReportLocationPicker.css'
 
-const DEFAULT_CENTER = { latitude: 37.566826, longitude: 126.9786567 }
+const DEFAULT_CENTER = {
+  latitude: Number(DEFAULT_REPORT_LOCATION.latitude),
+  longitude: Number(DEFAULT_REPORT_LOCATION.longitude),
+}
 
 interface ReportLocationValue {
   happenPlace: string
@@ -24,6 +28,7 @@ interface ReportLocationPickerProps {
 
 type MapState = 'loading' | 'ready' | 'missing-key' | 'error'
 type AddressState = 'idle' | 'loading' | 'error'
+type GeolocationState = 'idle' | 'loading' | 'error'
 
 function parseCoordinate(value: string, minimum: number, maximum: number) {
   const coordinate = Number(value)
@@ -39,13 +44,21 @@ function formatCoordinate(value: number) {
   return value.toFixed(7).replace(/\.?0+$/, '')
 }
 
-function getMapGuide(mapState: MapState, addressState: AddressState) {
+function getMapGuide(
+  mapState: MapState,
+  addressState: AddressState,
+  geolocationState: GeolocationState,
+) {
   if (mapState === 'loading') return '카카오맵을 불러오는 중이에요.'
   if (mapState === 'missing-key') return '카카오맵 키를 설정하면 지도에서 위치를 선택할 수 있어요.'
-  if (mapState === 'error') return '지도를 불러오지 못했어요. 아래에서 좌표를 직접 입력해주세요.'
+  if (mapState === 'error') return '지도를 불러오지 못했어요. 잠시 후 다시 시도해주세요.'
+  if (geolocationState === 'loading') return '현재 위치를 확인하고 있어요.'
+  if (geolocationState === 'error') {
+    return '현재 위치를 확인하지 못했어요. 지도를 직접 움직여 선택해주세요.'
+  }
   if (addressState === 'loading') return '선택한 위치의 주소를 확인하고 있어요.'
   if (addressState === 'error') return '주소를 찾지 못했어요. 장소명을 직접 입력해주세요.'
-  return '지도를 움직여 핀을 맞춰주세요.'
+  return ''
 }
 
 export function ReportLocationPicker({
@@ -59,14 +72,16 @@ export function ReportLocationPicker({
   const resolvedAppKey = appKey ?? import.meta.env.VITE_KAKAO_MAP_APP_KEY ?? ''
   const [mapState, setMapState] = useState<MapState>(resolvedAppKey ? 'loading' : 'missing-key')
   const [addressState, setAddressState] = useState<AddressState>('idle')
+  const [geolocationState, setGeolocationState] = useState<GeolocationState>('idle')
   const [isPlaceInputOpen, setIsPlaceInputOpen] = useState(false)
-  const [isCoordinateFallbackOpen, setIsCoordinateFallbackOpen] = useState(!resolvedAppKey)
   const mapContainerRef = useRef<HTMLDivElement>(null)
   const mapRef = useRef<KakaoMap>()
   const mapsApiRef = useRef<KakaoMapsApi>()
+  const selectMapCenterRef = useRef<() => void>()
   const latestValueRef = useRef(value)
   const onValueChangeRef = useRef(onValueChange)
   const addressRequestIdRef = useRef(0)
+  const geolocationRequestIdRef = useRef(0)
   const id = useId()
   const headingId = `${id}-heading`
   const placeInputId = `${id}-place-input`
@@ -83,7 +98,6 @@ export function ReportLocationPicker({
   useEffect(() => {
     if (!resolvedAppKey) {
       setMapState('missing-key')
-      setIsCoordinateFallbackOpen(true)
       return
     }
 
@@ -119,6 +133,7 @@ export function ReportLocationPicker({
         handleDragEnd = () => {
           if (!map) return
 
+          setGeolocationState('idle')
           const center = map.getCenter()
           const latitude = formatCoordinate(center.getLat())
           const longitude = formatCoordinate(center.getLng())
@@ -153,18 +168,19 @@ export function ReportLocationPicker({
           })
         }
 
+        selectMapCenterRef.current = handleDragEnd
         loadedMaps.event.addListener(map, 'dragend', handleDragEnd)
         setMapState('ready')
       })
       .catch(() => {
         if (!active) return
         setMapState('error')
-        setIsCoordinateFallbackOpen(true)
       })
 
     return () => {
       active = false
       addressRequestIdRef.current += 1
+      geolocationRequestIdRef.current += 1
 
       if (maps && map && handleDragEnd) {
         maps.event.removeListener(map, 'dragend', handleDragEnd)
@@ -173,6 +189,7 @@ export function ReportLocationPicker({
       if (mapRef.current === map) {
         mapRef.current = undefined
         mapsApiRef.current = undefined
+        selectMapCenterRef.current = undefined
       }
     }
   }, [resolvedAppKey])
@@ -198,11 +215,61 @@ export function ReportLocationPicker({
     onValueChange(nextValue)
   }
 
+  const moveToCurrentLocation = () => {
+    if (mapState !== 'ready') return
+
+    const geolocation = navigator.geolocation
+    if (!geolocation) {
+      setGeolocationState('error')
+      return
+    }
+
+    const requestId = ++geolocationRequestIdRef.current
+    setGeolocationState('loading')
+
+    geolocation.getCurrentPosition(
+      ({ coords }) => {
+        if (requestId !== geolocationRequestIdRef.current) return
+
+        const map = mapRef.current
+        const maps = mapsApiRef.current
+        const latitude = parseCoordinate(String(coords.latitude), -90, 90)
+        const longitude = parseCoordinate(String(coords.longitude), -180, 180)
+
+        if (!map || !maps || latitude === undefined || longitude === undefined) {
+          setGeolocationState('error')
+          return
+        }
+
+        map.setCenter(new maps.LatLng(latitude, longitude))
+        selectMapCenterRef.current?.()
+      },
+      () => {
+        if (requestId !== geolocationRequestIdRef.current) return
+        setGeolocationState('error')
+      },
+      {
+        enableHighAccuracy: true,
+        maximumAge: 60_000,
+        timeout: 10_000,
+      },
+    )
+  }
+
   return (
     <section aria-labelledby={headingId} className={classes}>
       <div>
         <h2 id={headingId}>{heading}</h2>
         <p className="report-location-picker__help">{description}</p>
+        <p
+          aria-live="polite"
+          className={`report-location-picker__status${
+            geolocationState === 'error' ? ' report-location-picker__status--highlight' : ''
+          }`}
+          role="status"
+        >
+          {getMapGuide(mapState, addressState, geolocationState)}
+        </p>
       </div>
 
       <div aria-label={`${heading} 지도`} className="report-location-picker__map" role="region">
@@ -210,9 +277,20 @@ export function ReportLocationPicker({
         {mapState !== 'ready' && (
           <span aria-hidden="true" className="report-location-picker__map-grid" />
         )}
-        <span aria-live="polite" className="report-location-picker__map-guide" role="status">
-          {getMapGuide(mapState, addressState)}
-        </span>
+        <button
+          aria-label={geolocationState === 'loading' ? '현재 위치 확인 중' : '현재 위치로 이동'}
+          className="report-location-picker__current-location"
+          disabled={mapState !== 'ready' || geolocationState === 'loading'}
+          onClick={moveToCurrentLocation}
+          title="현재 위치로 이동"
+          type="button"
+        >
+          <svg aria-hidden="true" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="3" />
+            <path d="M12 2v3M12 19v3M2 12h3M19 12h3" />
+            <circle cx="12" cy="12" r="7" />
+          </svg>
+        </button>
         <span aria-hidden="true" className="report-location-picker__map-radius" />
         <svg aria-hidden="true" className="report-location-picker__map-pin" viewBox="0 0 48 56">
           <path
@@ -275,44 +353,6 @@ export function ReportLocationPicker({
           </div>
         )}
       </div>
-
-      <details
-        className="report-location-picker__coordinate-details"
-        onToggle={(event) => setIsCoordinateFallbackOpen(event.currentTarget.open)}
-        open={isCoordinateFallbackOpen}
-      >
-        <summary>지도 연결 문제 시 좌표 직접 입력</summary>
-        <div className="report-location-picker__coordinate-fields">
-          <TextInput
-            label="위도"
-            max={90}
-            min={-90}
-            name="latitude"
-            onChange={(event) =>
-              updateValue({ ...latestValueRef.current, latitude: event.target.value })
-            }
-            placeholder="예: 37.5665"
-            required
-            step="any"
-            type="number"
-            value={value.latitude}
-          />
-          <TextInput
-            label="경도"
-            max={180}
-            min={-180}
-            name="longitude"
-            onChange={(event) =>
-              updateValue({ ...latestValueRef.current, longitude: event.target.value })
-            }
-            placeholder="예: 126.9780"
-            required
-            step="any"
-            type="number"
-            value={value.longitude}
-          />
-        </div>
-      </details>
     </section>
   )
 }

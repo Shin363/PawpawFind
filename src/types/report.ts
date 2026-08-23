@@ -25,6 +25,12 @@ export interface ReportRequestFields {
   longitude: number
 }
 
+export const DEFAULT_REPORT_LOCATION = {
+  happenPlace: '서울특별시 강남구 테헤란로4길 29, 4층(역삼동, 정우씨티)',
+  latitude: '37.4965607',
+  longitude: '127.0305335',
+} as const
+
 export interface CreateSightingReportRequest extends ReportRequestFields {
   reportType: 'FOUND'
   title: string

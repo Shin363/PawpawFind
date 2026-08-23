@@ -1,6 +1,11 @@
 import { useState } from 'react'
 import type { AnimalSize, Species } from '@/types/domain'
-import type { ReportFeatureCategory, ReportFeatureInput, ReportRequestFields } from '@/types/report'
+import {
+  DEFAULT_REPORT_LOCATION,
+  type ReportFeatureCategory,
+  type ReportFeatureInput,
+  type ReportRequestFields,
+} from '@/types/report'
 
 interface UseReportFormOptions {
   initialEventDate?: string
@@ -19,9 +24,9 @@ export function useReportForm({ initialEventDate = '', initialSize }: UseReportF
   const [size, setSize] = useState<AnimalSize>(initialSize)
   const [eventDate, setEventDate] = useState(initialEventDate)
   const [eventHour, setEventHour] = useState('')
-  const [happenPlace, setHappenPlace] = useState('')
-  const [latitude, setLatitude] = useState('')
-  const [longitude, setLongitude] = useState('')
+  const [happenPlace, setHappenPlace] = useState<string>(DEFAULT_REPORT_LOCATION.happenPlace)
+  const [latitude, setLatitude] = useState<string>(DEFAULT_REPORT_LOCATION.latitude)
+  const [longitude, setLongitude] = useState<string>(DEFAULT_REPORT_LOCATION.longitude)
   const [features, setFeatures] = useState<ReportFeatureInput[]>([])
 
   const toggleFeature = ({ category, keyword, maxSelections, selection }: ToggleFeatureOptions) => {
