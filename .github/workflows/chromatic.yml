@@ -38,6 +38,6 @@ jobs:
           env.CHROMATIC_PROJECT_TOKEN != '' &&
           (github.event_name != 'pull_request' ||
           github.event.pull_request.head.repo.fork == false)
-        uses: chromaui/action@v13
+        uses: chromaui/action@v18
         with:
           projectToken: ${{ env.CHROMATIC_PROJECT_TOKEN }}

@@ -7,8 +7,8 @@ import {
 } from '@/features/missing-animal-search'
 import { MyPage } from '@/features/my-page'
 import {
-  SightingReportCreatePage,
   SightingReportDetailPage,
+  SightingReportFormPage,
   SightingReportListPage,
 } from '@/features/sighting-reports'
 import { RequireAuth } from './guards/RequireAuth'
@@ -31,8 +31,8 @@ export const appRoutes: RouteObject[] = [
         Component: SightingReportListPage,
       },
       {
-        path: ROUTE_PATHS.SIGHTING_REPORT_CREATE,
-        Component: SightingReportCreatePage,
+        path: ROUTE_PATHS.SIGHTING_REPORT_FORM,
+        Component: SightingReportFormPage,
       },
       {
         path: ROUTE_PATHS.SIGHTING_REPORT_DETAIL,

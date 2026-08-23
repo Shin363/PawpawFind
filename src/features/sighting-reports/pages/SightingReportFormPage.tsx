@@ -11,11 +11,11 @@ import type { AnimalSize, Species } from '@/types/domain'
 import {
   REPORT_FEATURE_GROUPS,
   REPORT_TIME_BAND_OPTIONS,
-  type CreateMissingAnimalReportRequest,
+  type CreateSightingReportRequest,
   type ReportFeatureInput,
   type ReportPhotoDraft,
 } from '@/types/report'
-import './MissingAnimalSearchFormPage.css'
+import './SightingReportFormPage.css'
 
 const SPECIES_OPTIONS = [
   { value: 'DOG', label: '강아지' },
@@ -28,7 +28,7 @@ const SIZE_OPTIONS = [
   { value: 'LARGE', label: '대형' },
 ] as const
 
-const MAX_MISSING_ANIMAL_PHOTOS = 3
+const MAX_SIGHTING_PHOTOS = 3
 const [COLOR_FEATURE_GROUP, ...DETAIL_FEATURE_GROUPS] = REPORT_FEATURE_GROUPS
 
 function getTodayDateInputValue() {
@@ -40,23 +40,23 @@ function getTodayDateInputValue() {
   return `${year}-${month}-${day}`
 }
 
-interface MissingAnimalSearchFormSubmission {
-  report: CreateMissingAnimalReportRequest
+interface SightingReportFormSubmission {
+  report: CreateSightingReportRequest
   features: ReportFeatureInput[]
   photos: ReportPhotoDraft[]
 }
 
-interface MissingAnimalSearchFormPageProps {
-  onSubmit?: (submission: MissingAnimalSearchFormSubmission) => void
+interface SightingReportFormPageProps {
+  onSubmit?: (submission: SightingReportFormSubmission) => void
 }
 
-interface MissingAnimalPhotoPreviewProps {
+interface SightingPhotoPreviewProps {
   file: File
   index: number
   onRemove: () => void
 }
 
-function MissingAnimalPhotoPreview({ file, index, onRemove }: MissingAnimalPhotoPreviewProps) {
+function SightingPhotoPreview({ file, index, onRemove }: SightingPhotoPreviewProps) {
   const [previewUrl, setPreviewUrl] = useState('')
 
   useEffect(() => {
@@ -70,11 +70,11 @@ function MissingAnimalPhotoPreview({ file, index, onRemove }: MissingAnimalPhoto
 
   return (
     <li>
-      {previewUrl && <img alt={`선택한 실종 동물 사진 ${index + 1}`} src={previewUrl} />}
-      <span className="missing-animal-form__photo-index">사진 {index + 1}</span>
+      {previewUrl && <img alt={`선택한 목격 사진 ${index + 1}`} src={previewUrl} />}
+      <span className="sighting-report-form__photo-index">사진 {index + 1}</span>
       <button
         aria-label={`사진 ${index + 1} 제거`}
-        className="missing-animal-form__photo-remove"
+        className="sighting-report-form__photo-remove"
         onClick={onRemove}
         type="button"
       >
@@ -84,14 +84,15 @@ function MissingAnimalPhotoPreview({ file, index, onRemove }: MissingAnimalPhoto
   )
 }
 
-export function MissingAnimalSearchFormPage({ onSubmit }: MissingAnimalSearchFormPageProps) {
+export function SightingReportFormPage({ onSubmit }: SightingReportFormPageProps) {
   const [step, setStep] = useState<1 | 2>(1)
+  const [title, setTitle] = useState('')
   const [photos, setPhotos] = useState<File[]>([])
   const form = useReportForm({
     initialEventDate: getTodayDateInputValue(),
     initialSize: 'MEDIUM',
   })
-  const canSubmit = photos.length > 0 && form.isComplete
+  const canSubmit = title.trim() !== '' && photos.length > 0 && form.isComplete
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -106,7 +107,8 @@ export function MissingAnimalSearchFormPage({ onSubmit }: MissingAnimalSearchFor
     onSubmit?.({
       report: {
         ...form.getRequestFields(),
-        reportType: 'LOST',
+        reportType: 'FOUND',
+        title: title.trim(),
       },
       features: form.features,
       photos: photos.map((file, index) => ({ file, sortOrder: index + 1 })),
@@ -118,7 +120,7 @@ export function MissingAnimalSearchFormPage({ onSubmit }: MissingAnimalSearchFor
 
     if (selectedPhotos.length === 0) return
 
-    setPhotos((current) => [...current, ...selectedPhotos].slice(0, MAX_MISSING_ANIMAL_PHOTOS))
+    setPhotos((current) => [...current, ...selectedPhotos].slice(0, MAX_SIGHTING_PHOTOS))
     event.target.value = ''
   }
 
@@ -128,62 +130,71 @@ export function MissingAnimalSearchFormPage({ onSubmit }: MissingAnimalSearchFor
 
   return (
     <>
-      <main className="missing-animal-form-page">
+      <main className="sighting-report-form-page">
         {step === 1 ? (
-          <a className="missing-animal-form__back" href={ROUTE_PATHS.MISSING_ANIMAL_SEARCH}>
-            <span aria-hidden="true">←</span> 실종 동물 찾기
+          <a className="sighting-report-form__back" href={ROUTE_PATHS.SIGHTING_REPORTS}>
+            <span aria-hidden="true">←</span> 목격 제보 지도
           </a>
         ) : (
-          <button className="missing-animal-form__back" onClick={() => setStep(1)} type="button">
+          <button className="sighting-report-form__back" onClick={() => setStep(1)} type="button">
             <span aria-hidden="true">←</span> 이전 단계
           </button>
         )}
 
-        <header className="missing-animal-form__step-header">
-          <div className="missing-animal-form__step-progress">
+        <header className="sighting-report-form__step-header">
+          <div className="sighting-report-form__step-progress">
             <span>STEP {step} / 2</span>
-            <span aria-hidden="true" className="missing-animal-form__step-track">
+            <span aria-hidden="true" className="sighting-report-form__step-track">
               <span style={{ width: step === 1 ? '50%' : '100%' }} />
             </span>
           </div>
-          <h1>
-            {step === 1 ? '잃어버린 아이의 정보를 알려주세요' : '잃어버린 아이의 특징을 골라주세요'}
-          </h1>
+          <h1>{step === 1 ? '목격한 동물의 사진을 올려주세요' : '기억나는 특징을 골라주세요'}</h1>
           <p>
             {step === 1
-              ? '사진과 마지막으로 본 장소를 등록하면 비슷한 목격 제보를 찾아드려요.'
-              : '모두 건너뛰어도 검색할 수 있어요. 고른 특징은 비슷한 목격 제보를 좁혀보는 조건으로 쓰여요.'}
+              ? ''
+              : '모두 건너뛰어도 등록돼요. 고른 특징은 보호자가 찾을 때 검색 조건으로 쓰여요.'}
           </p>
         </header>
 
-        <form className="missing-animal-form" id="missing-animal-form" onSubmit={handleSubmit}>
+        <form className="sighting-report-form" id="sighting-report-form" onSubmit={handleSubmit}>
           {step === 1 && (
-            <div className="missing-animal-form__columns">
-              <div className="missing-animal-form__column">
+            <div className="sighting-report-form__columns">
+              <div className="sighting-report-form__column">
+                <TextInput
+                  className="sighting-report-form__title-input"
+                  containerClassName="sighting-report-form__title-field"
+                  label="제목"
+                  name="title"
+                  onChange={(event) => setTitle(event.target.value)}
+                  placeholder="예: 연남동 골목에서 갈색 중형견 봤어요"
+                  required
+                  value={title}
+                />
+
                 <section
-                  aria-labelledby="missing-photos-heading"
-                  className="missing-animal-form__section"
+                  aria-labelledby="sighting-photos-heading"
+                  className="sighting-report-form__section"
                 >
-                  <div className="missing-animal-form__photo-heading">
+                  <div className="sighting-report-form__photo-heading">
                     <div>
-                      <h2 id="missing-photos-heading">사진</h2>
-                      <p className="missing-animal-form__help" id="missing-photos-help">
+                      <h2 id="sighting-photos-heading">사진</h2>
+                      <p className="sighting-report-form__help" id="sighting-photos-help">
                         사진은 최대 3장까지 추가 가능해요.
                       </p>
                     </div>
                     <label
-                      className="missing-animal-form__camera-button"
+                      className="sighting-report-form__camera-button"
                       title={
-                        photos.length >= MAX_MISSING_ANIMAL_PHOTOS
+                        photos.length >= MAX_SIGHTING_PHOTOS
                           ? '사진을 3장까지 선택했습니다'
                           : '사진 추가'
                       }
                     >
                       <input
                         accept="image/*"
-                        aria-describedby="missing-photos-help"
-                        aria-label="실종 동물 사진 선택"
-                        disabled={photos.length >= MAX_MISSING_ANIMAL_PHOTOS}
+                        aria-describedby="sighting-photos-help"
+                        aria-label="목격 사진 선택"
+                        disabled={photos.length >= MAX_SIGHTING_PHOTOS}
                         multiple
                         onChange={handlePhotoChange}
                         type="file"
@@ -200,12 +211,9 @@ export function MissingAnimalSearchFormPage({ onSubmit }: MissingAnimalSearchFor
                     </label>
                   </div>
                   {photos.length > 0 && (
-                    <ul
-                      aria-label="선택한 실종 동물 사진"
-                      className="missing-animal-form__photo-list"
-                    >
+                    <ul aria-label="선택한 목격 사진" className="sighting-report-form__photo-list">
                       {photos.map((photo, index) => (
-                        <MissingAnimalPhotoPreview
+                        <SightingPhotoPreview
                           file={photo}
                           index={index}
                           key={`${photo.name}-${photo.size}-${photo.lastModified}-${index}`}
@@ -216,8 +224,8 @@ export function MissingAnimalSearchFormPage({ onSubmit }: MissingAnimalSearchFor
                   )}
                 </section>
 
-                <section aria-label="동물 기본 정보" className="missing-animal-form__section">
-                  <fieldset className="missing-animal-form__field-group">
+                <section aria-label="동물 기본 정보" className="sighting-report-form__section">
+                  <fieldset className="sighting-report-form__field-group">
                     <legend>동물 종류</legend>
                     <SegmentedControl<Species>
                       ariaLabel="동물 종류"
@@ -227,9 +235,9 @@ export function MissingAnimalSearchFormPage({ onSubmit }: MissingAnimalSearchFor
                     />
                   </fieldset>
 
-                  <fieldset className="missing-animal-form__field-group">
+                  <fieldset className="sighting-report-form__field-group">
                     <legend>크기</legend>
-                    <p className="missing-animal-form__help">
+                    <p className="sighting-report-form__help">
                       소형 5kg 이하 · 중형 5–15kg · 대형 15kg 이상 정도로 봐주세요.
                     </p>
                     <SegmentedControl<AnimalSize>
@@ -240,10 +248,10 @@ export function MissingAnimalSearchFormPage({ onSubmit }: MissingAnimalSearchFor
                     />
                   </fieldset>
 
-                  <fieldset className="missing-animal-form__field-group">
-                    <legend>털색</legend>
-                    <p className="missing-animal-form__help">최대 3개까지 입력 가능해요.</p>
-                    <div className="missing-animal-form__chips">
+                  <fieldset className="sighting-report-form__field-group">
+                    <legend>색상</legend>
+                    <p className="sighting-report-form__help">최대 3개까지 입력 가능해요.</p>
+                    <div className="sighting-report-form__chips">
                       {COLOR_FEATURE_GROUP.options.map((option) => {
                         const selected = form.isFeatureSelected(
                           COLOR_FEATURE_GROUP.category,
@@ -252,7 +260,7 @@ export function MissingAnimalSearchFormPage({ onSubmit }: MissingAnimalSearchFor
 
                         return (
                           <SelectableChip
-                            className="missing-animal-form__color-chip"
+                            className="sighting-report-form__color-chip"
                             key={option.keyword}
                             onClick={() =>
                               form.toggleFeature({
@@ -266,7 +274,7 @@ export function MissingAnimalSearchFormPage({ onSubmit }: MissingAnimalSearchFor
                           >
                             <span
                               aria-hidden="true"
-                              className="missing-animal-form__color-swatch"
+                              className="sighting-report-form__color-swatch"
                               style={{ backgroundColor: option.swatch }}
                             />
                             {option.label}
@@ -278,11 +286,11 @@ export function MissingAnimalSearchFormPage({ onSubmit }: MissingAnimalSearchFor
                 </section>
               </div>
 
-              <div className="missing-animal-form__column">
+              <div className="sighting-report-form__column">
                 <ReportLocationPicker
-                  className="missing-animal-form__section"
-                  description="지도를 움직여 핀을 맞추면 마지막으로 본 위치가 저장돼요."
-                  heading="실종 장소"
+                  className="sighting-report-form__section"
+                  description="지도를 움직여 핀을 맞추면 그 지점이 저장돼요."
+                  heading="발견 장소"
                   onValueChange={(location) => {
                     form.setHappenPlace(location.happenPlace)
                     form.setLatitude(location.latitude)
@@ -296,17 +304,17 @@ export function MissingAnimalSearchFormPage({ onSubmit }: MissingAnimalSearchFor
                 />
 
                 <section
-                  aria-labelledby="missing-event-heading"
-                  className="missing-animal-form__section"
+                  aria-labelledby="sighting-event-heading"
+                  className="sighting-report-form__section"
                 >
                   <div>
-                    <h2 id="missing-event-heading">실종 날짜 · 시간</h2>
-                    <p className="missing-animal-form__help">시간을 모르면 비워두세요.</p>
+                    <h2 id="sighting-event-heading">발견 날짜 · 시간</h2>
+                    <p className="sighting-report-form__help">시간을 모르면 비워두세요.</p>
                   </div>
-                  <div className="missing-animal-form__event-fields">
+                  <div className="sighting-report-form__event-fields">
                     <TextInput
-                      containerClassName="missing-animal-form__event-input"
-                      label="잃어버린 날짜"
+                      containerClassName="sighting-report-form__event-input"
+                      label="발견 날짜"
                       name="eventDate"
                       onChange={(event) => form.setEventDate(event.target.value)}
                       required
@@ -314,8 +322,8 @@ export function MissingAnimalSearchFormPage({ onSubmit }: MissingAnimalSearchFor
                       value={form.eventDate}
                     />
                     <TimeBandSelect
-                      className="missing-animal-form__event-time"
-                      label="잃어버린 시간대"
+                      className="sighting-report-form__event-time"
+                      label="발견 시간대"
                       onValueChange={form.setEventHour}
                       options={REPORT_TIME_BAND_OPTIONS}
                       value={form.eventHour}
@@ -329,16 +337,16 @@ export function MissingAnimalSearchFormPage({ onSubmit }: MissingAnimalSearchFor
           {step === 2 && (
             <section
               aria-label="동물 특징"
-              className="missing-animal-form__section missing-animal-form__features-section"
+              className="sighting-report-form__section sighting-report-form__features-section"
             >
-              <div className="missing-animal-form__feature-groups">
+              <div className="sighting-report-form__feature-groups">
                 {DETAIL_FEATURE_GROUPS.map((group) => (
-                  <fieldset className="missing-animal-form__feature-group" key={group.category}>
+                  <fieldset className="sighting-report-form__feature-group" key={group.category}>
                     <legend>{group.label}</legend>
-                    <span className="missing-animal-form__selection-hint">
+                    <span className="sighting-report-form__selection-hint">
                       {group.selection === 'single' ? '하나만' : '여러 개 선택 가능'}
                     </span>
-                    <div className="missing-animal-form__chips">
+                    <div className="sighting-report-form__chips">
                       {group.options.map((option) => {
                         const selected = form.isFeatureSelected(group.category, option.keyword)
 
@@ -368,10 +376,10 @@ export function MissingAnimalSearchFormPage({ onSubmit }: MissingAnimalSearchFor
         </form>
       </main>
 
-      <div className="missing-animal-form__actions">
-        <div className="missing-animal-form__actions-inner">
-          <Button disabled={!canSubmit} form="missing-animal-form" size="large" type="submit">
-            {step === 1 ? '다음 · 특징 고르기' : '비슷한 동물 찾아보기'}
+      <div className="sighting-report-form__actions">
+        <div className="sighting-report-form__actions-inner">
+          <Button disabled={!canSubmit} form="sighting-report-form" size="large" type="submit">
+            {step === 1 ? '다음 · 특징 고르기' : '제보 등록하기'}
           </Button>
         </div>
       </div>
@@ -379,4 +387,4 @@ export function MissingAnimalSearchFormPage({ onSubmit }: MissingAnimalSearchFor
   )
 }
 
-export type { MissingAnimalSearchFormPageProps, MissingAnimalSearchFormSubmission }
+export type { SightingReportFormPageProps, SightingReportFormSubmission }

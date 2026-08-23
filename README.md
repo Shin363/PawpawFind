@@ -59,6 +59,18 @@ pnpm dev
 `.env.example`을 복사하면 개발 환경에서 MSW가 실행되어 백엔드 없이 목격 제보 목록을 확인할 수
 있습니다.
 
+카카오 지도에서 위치를 선택하려면 카카오 개발자 콘솔에서 앱의 JavaScript 키를 발급하고, 해당 키의
+JavaScript SDK 도메인에 로컬 개발 주소(기본값 `http://localhost:5173`)와 실제 배포 주소를
+등록합니다. 발급한 값은 Git에 포함되지 않는 `.env`에만 설정합니다.
+
+```text
+VITE_KAKAO_MAP_APP_KEY=발급받은 JavaScript 키
+```
+
+키가 없거나 SDK를 불러오지 못해도 좌표 직접 입력 fallback을 사용하므로 테스트, 앱 빌드와
+Storybook 빌드는 실패하지 않습니다. `VITE_` 환경변수는 브라우저 번들에 포함되므로 서버용 REST API
+키나 Admin 키를 넣지 않습니다.
+
 ## 스크립트
 
 | 명령어                 | 설명                         |
@@ -103,11 +115,19 @@ CHROMATIC_PROJECT_TOKEN
 ## 현재 UI 구조
 
 - Foundation token: `src/styles/tokens.css`
-- 공용 primitive: `src/components/ui`의 Button, Badge, SelectableChip, SegmentedControl, TextInput
+- 공용 primitive: `src/components/ui`의 Button, Badge, SelectableChip, SegmentedControl, TextInput,
+  TimeBandSelect
 - 목격 제보 목록 UI: `src/features/sighting-reports/components`의 목록 항목, 필터 panel, 적용 필터,
   pagination
+- 입력 UI: `/sightings/new`의 목격 제보 폼과 `/find/new`의 실종 동물 찾기 폼
+- 위치 선택 UI: `src/features/report-location`의 카카오 지도 기반 `ReportLocationPicker`
 
 공용 primitive는 제품 데이터나 API를 모르며, 목격 제보 문구와 흐름을 아는 UI는
 `sighting-reports`, 실종 동물 찾기 흐름은 `missing-animal-search` feature에 둡니다. 자세한 승격
 기준과 지원 상태는 `docs/design-system.md`, 와이어프레임 근거와 보류 항목은
 `docs/design-audit.md`를 참고합니다.
+
+두 입력 폼은 동물 종류, 크기, 날짜·2시간 단위 시간대, 카카오 지도 기반 장소·좌표와 특징 선택을
+지원합니다. 목격 제보만 제목을 받으며, 털색을 포함한 특징은 서버의 `category`와 `keyword` 구조로
+변환합니다. 사진 파일 선택은 지원하지만 외부 storage 업로드와 사진 URL 등록, 실제 제출 API 연결은
+아직 포함하지 않습니다.

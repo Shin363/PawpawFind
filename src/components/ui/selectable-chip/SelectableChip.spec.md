@@ -23,13 +23,13 @@ interface SelectableChipProps extends Omit<
 
 ## 상태
 
-- [x] unselected
-- [x] selected
+- [x] unselected: 기본 surface, border, secondary text
+- [x] selected: accent border, accent-soft surface, primary text와 semibold 강조
 - [x] hover
 - [x] focus-visible
 - [x] disabled
 - [ ] removable: 선택 상태 토글과 삭제 동작을 하나의 API에 섞지 않는다.
-- [ ] color swatch: 색상 선택의 시각·접근성 계약을 별도로 정한 뒤 추가한다.
+- [ ] color swatch prop: 제품별 색상 값은 사용처가 인식 가능한 label과 함께 children으로 조합한다.
 
 ## 접근성
 
