@@ -14,6 +14,14 @@ interface KakaoMap {
   setCenter: (position: KakaoLatLng) => void
 }
 
+interface KakaoMarker {
+  setMap: (map: KakaoMap | null) => void
+}
+
+interface KakaoCircle {
+  setMap: (map: KakaoMap | null) => void
+}
+
 interface KakaoAddressResult {
   address: { address_name: string } | null
   road_address: { address_name: string } | null
@@ -28,6 +36,16 @@ interface KakaoGeocoder {
 interface KakaoMapsApi {
   LatLng: new (latitude: number, longitude: number) => KakaoLatLng
   Map: new (container: HTMLElement, options: KakaoMapOptions) => KakaoMap
+  Marker?: new (options: { map: KakaoMap; position: KakaoLatLng }) => KakaoMarker
+  Circle?: new (options: {
+    center: KakaoLatLng
+    radius: number
+    strokeWeight: number
+    strokeColor: string
+    strokeOpacity: number
+    fillColor: string
+    fillOpacity: number
+  }) => KakaoCircle
   event: {
     addListener: (target: KakaoMap, type: string, handler: () => void) => void
     removeListener: (target: KakaoMap, type: string, handler: () => void) => void
@@ -48,8 +66,10 @@ declare global {
 export type {
   KakaoAddressResult,
   KakaoGeocoder,
+  KakaoCircle,
   KakaoLatLng,
   KakaoMap,
   KakaoMapOptions,
+  KakaoMarker,
   KakaoMapsApi,
 }

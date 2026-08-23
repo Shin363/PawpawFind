@@ -1,11 +1,80 @@
-import type { ListResponse } from '@/types/domain'
-
 export interface SightingReportListItem {
   id: string
   title: string
   speciesLabel: string
+  colorText: string
+  sizeLabel: string
   areaText: string
   dateText: string
+  thumbnailUrl?: string
 }
 
-export type SightingReportListResponse = ListResponse<SightingReportListItem>
+export interface SightingReportListResponse {
+  items: SightingReportListItem[]
+  page: { number: number; size: number; totalCount: number; totalPages: number }
+}
+
+export interface ReportListApiItem {
+  reportId: number
+  userId: number
+  reportType: string
+  title: string
+  species: string
+  size: string
+  eventDate: string
+  eventHour: number
+  happenPlace: string
+  latitude: number
+  longitude: number
+  description: string
+  status: string
+  createdAt: string
+  updatedAt: string
+}
+
+interface ReportPageSort {
+  empty: boolean
+  sorted: boolean
+  unsorted: boolean
+}
+
+export interface ReportListApiResponse {
+  totalPages: number
+  totalElements: number
+  size: number
+  content: ReportListApiItem[]
+  number: number
+  sort: ReportPageSort
+  pageable: {
+    offset: number
+    sort: ReportPageSort
+    paged: boolean
+    pageNumber: number
+    pageSize: number
+    unpaged: boolean
+  }
+  numberOfElements: number
+  first: boolean
+  last: boolean
+  empty: boolean
+}
+
+export interface SightingReportDetail extends SightingReportListItem {
+  timeBandText: string
+  coatLengthLabel: string
+  wearingText: string
+  behaviorText: string
+  photos: { id: string; url: string; alt: string }[]
+  location: {
+    lat: number
+    lng: number
+    radiusM: number
+  }
+  predictedRoute: {
+    id: string
+    areaText: string
+    dateTimeText: string
+    description: string
+    kind: 'reported' | 'matched' | 'predicted'
+  }[]
+}

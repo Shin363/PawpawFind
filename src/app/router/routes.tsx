@@ -6,15 +6,12 @@ import {
   MissingAnimalSearchResultPage,
 } from '@/features/missing-animal-search'
 import { MyPage } from '@/features/my-page'
-import {
-  SightingReportDetailPage,
-  SightingReportFormPage,
-  SightingReportListPage,
-} from '@/features/sighting-reports'
+import { SightingReportDetailPage, SightingReportListPage } from '@/features/sighting-reports'
 import { RequireAuth } from './guards/RequireAuth'
 import { AppLayout } from './layouts/AppLayout'
 import { NotFoundPage } from './pages/NotFoundPage'
 import { RouteErrorPage } from './pages/RouteErrorPage'
+import { SightingReportFormRoute } from './pages/SightingReportFormRoute'
 import { ROUTE_PATHS } from './paths'
 
 export const appRoutes: RouteObject[] = [
@@ -32,7 +29,7 @@ export const appRoutes: RouteObject[] = [
       },
       {
         path: ROUTE_PATHS.SIGHTING_REPORT_FORM,
-        Component: SightingReportFormPage,
+        Component: SightingReportFormRoute,
       },
       {
         path: ROUTE_PATHS.SIGHTING_REPORT_DETAIL,

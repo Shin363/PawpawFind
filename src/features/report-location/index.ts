@@ -1,2 +1,6 @@
-export { ReportLocationPicker } from './components'
-export type { ReportLocationPickerProps, ReportLocationValue } from './components'
+export { ReportLocationMap, ReportLocationPicker } from './components'
+export type {
+  ReportLocationMapProps,
+  ReportLocationPickerProps,
+  ReportLocationValue,
+} from './components'

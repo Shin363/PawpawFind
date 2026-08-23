@@ -133,7 +133,7 @@ export function SightingReportFormPage({ onSubmit }: SightingReportFormPageProps
       <main className="sighting-report-form-page">
         {step === 1 ? (
           <a className="sighting-report-form__back" href={ROUTE_PATHS.SIGHTING_REPORTS}>
-            <span aria-hidden="true">←</span> 목격 제보 지도
+            <span aria-hidden="true">←</span> 이전으로
           </a>
         ) : (
           <button className="sighting-report-form__back" onClick={() => setStep(1)} type="button">

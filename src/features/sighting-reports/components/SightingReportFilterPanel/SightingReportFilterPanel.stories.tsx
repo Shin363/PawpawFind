@@ -28,21 +28,14 @@ function FilterPanelExample() {
     setSelected((current) =>
       current.includes(value) ? current.filter((item) => item !== value) : [...current, value],
     )
-  return (
-    <SightingReportFilterPanel
-      groups={groups}
-      onReset={() => setSelected([])}
-      onToggle={toggle}
-      selectedValues={selected}
-    />
-  )
+  return <SightingReportFilterPanel groups={groups} onToggle={toggle} selectedValues={selected} />
 }
 
 const meta = {
   title: 'Features/Reports/SightingReportFilterPanel',
   component: SightingReportFilterPanel,
   tags: ['autodocs'],
-  args: { groups, onReset: () => undefined, onToggle: () => undefined, selectedValues: ['dog'] },
+  args: { groups, onToggle: () => undefined, selectedValues: ['dog'] },
   decorators: [
     (Story) => (
       <div style={{ width: 560, maxWidth: '100%' }}>

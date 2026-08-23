@@ -15,31 +15,28 @@ const groups = [
 ]
 
 describe('SightingReportFilterPanel', () => {
-  it('그룹과 controlled 선택 상태를 표시하고 toggle을 알린다', async () => {
+  it('그룹을 펼쳐 controlled 선택 상태를 표시하고 toggle을 알린다', async () => {
     const onToggle = vi.fn()
     const user = userEvent.setup()
     render(
-      <SightingReportFilterPanel
-        groups={groups}
-        onReset={vi.fn()}
-        onToggle={onToggle}
-        selectedValues={['dog']}
-      />,
+      <SightingReportFilterPanel groups={groups} onToggle={onToggle} selectedValues={['dog']} />,
     )
+    const disclosure = screen.getByRole('button', { name: /동물 종류.*강아지/ })
+    expect(disclosure).toHaveAttribute('aria-expanded', 'false')
+    await user.click(disclosure)
+    expect(disclosure).toHaveAttribute('aria-expanded', 'true')
     expect(screen.getByRole('button', { name: '강아지' })).toHaveAttribute('aria-pressed', 'true')
     await user.click(screen.getByRole('button', { name: '고양이' }))
     expect(onToggle).toHaveBeenCalledWith('cat')
   })
 
-  it('선택값이 없으면 초기화를 비활성화한다', () => {
-    render(
-      <SightingReportFilterPanel
-        groups={groups}
-        onReset={vi.fn()}
-        onToggle={vi.fn()}
-        selectedValues={[]}
-      />,
-    )
-    expect(screen.getByRole('button', { name: '필터 초기화' })).toBeDisabled()
+  it('같은 그룹을 다시 누르면 옵션을 접는다', async () => {
+    const user = userEvent.setup()
+    render(<SightingReportFilterPanel groups={groups} onToggle={vi.fn()} selectedValues={[]} />)
+    const disclosure = screen.getByRole('button', { name: '동물 종류' })
+    await user.click(disclosure)
+    expect(screen.getByRole('button', { name: '고양이' })).toBeInTheDocument()
+    await user.click(disclosure)
+    expect(screen.queryByRole('button', { name: '고양이' })).not.toBeInTheDocument()
   })
 })

@@ -1,4 +1,5 @@
 import { screen, waitFor } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { createMemoryRouter } from 'react-router'
 import { RouterProvider } from 'react-router/dom'
 import { describe, expect, it } from 'vitest'
@@ -29,10 +30,16 @@ describe('appRoutes', () => {
     ).toBeInTheDocument()
   })
 
-  it('목격 제보 상세 route parameter를 전달한다', () => {
-    renderRoute('/sightings/report-1')
-    expect(screen.getByRole('heading', { name: '목격 제보 상세' })).toBeInTheDocument()
-    expect(screen.getByText('제보 ID: report-1')).toBeInTheDocument()
+  it('목격 제보 상세 route parameter로 데이터를 불러온다', async () => {
+    const user = userEvent.setup()
+    renderRoute('/sightings/1')
+    expect(
+      await screen.findByRole('heading', { name: '연남동 골목에서 갈색 중형견 봤어요' }),
+    ).toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: '다음 사진' }))
+    expect(screen.getByText('2 / 3')).toBeInTheDocument()
+    expect(screen.getByText('제보 사진 2')).toBeInTheDocument()
   })
 
   it('미인증 사용자를 보호 경로에서 홈으로 이동시키고 목적지를 보존한다', async () => {

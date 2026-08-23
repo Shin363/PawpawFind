@@ -59,17 +59,22 @@ src/
 
 ## 현재 Mock 계약
 
-백엔드 API 명세가 확정되기 전까지 목격 제보 목록은 다음 임시 계약을 사용합니다. 이 경로와 응답은
-프론트엔드 개발을 위한 mock 경계이며, 서버 계약이 확정되면
-`src/features/sighting-reports/api`의 경로와 타입,
-MSW handler를 함께 변경합니다.
+목격 제보 목록은 백엔드의 Spring Page 계약을 사용합니다. 목록 화면은 한 페이지에 10건을 요청하며
+목격 제보만 조회하도록 `reportType=FOUND`를 전달합니다.
 
 ```text
-GET /api/sighting-reports
+GET /api/reports?page=0&size=10&reportType=FOUND
+GET /api/reports/:sightingId
 ```
 
-응답은 공용 `ListResponse<SightingReportListItem>` 형태이며 각 목록 항목은 `id`, `title`,
-`speciesLabel`, `areaText`, `dateText`를 포함합니다.
+목록 응답은 `content`, `totalPages`, `totalElements`, `number`, `size`, `pageable` 등을 포함하는
+`ReportListApiResponse` 형태입니다. API 계층에서 이를 `SightingReportListItem` 화면 모델로 변환하며,
+페이지 버튼을 누르면 새 `page` 값으로 서버에 다시 요청합니다. 개발 Mock은 15건을 제공해 10건과
+5건의 두 페이지를 재현합니다.
+
+상세 응답은 아직 백엔드 계약이 확정되지 않아 사진, 비식별 위치 반경, 동물 특징, 예측 이동 경로를
+포함하는 `SightingReportDetail` 임시 계약을 유지합니다. 상세의 위치 좌표는 화면에 직접 노출하지 않고
+동 단위 주소와 반경으로만 표현합니다.
 
 ## 환경변수
 
@@ -81,3 +86,6 @@ VITE_ENABLE_MSW=true
 
 환경변수 문자열을 truthy 값으로 바로 사용하지 않고 명시적으로 파싱합니다. 프로덕션 빌드에서는
 이 값과 관계없이 Mock worker가 시작되지 않도록 진입점에서 환경을 함께 확인합니다.
+개발 Mock이 활성화되면 Axios는 `VITE_API_BASE_URL`을 사용하지 않고 현재 개발 서버 기준의 상대 경로로
+요청합니다. MSW가 이 요청을 가로채므로 로컬 백엔드 서버가 실행 중이지 않아도 됩니다. Mock이 꺼져
+있거나 프로덕션 빌드인 경우에만 `VITE_API_BASE_URL`의 실제 백엔드로 요청합니다.
