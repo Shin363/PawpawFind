@@ -44,7 +44,7 @@
 }
 
 .sighting-report-form__step-progress > span:first-child {
-  color: #b45309;
+  color: var(--color-accent-text);
   font-size: var(--font-size-xs);
   font-weight: 700;
   line-height: 1;
@@ -95,6 +95,7 @@
   grid-template-columns: repeat(auto-fit, minmax(min(28.75rem, 100%), 1fr));
   gap: 1.75rem 2rem;
   align-items: start;
+  padding-bottom: var(--space-8);
 }
 
 .sighting-report-form__column {
@@ -337,17 +338,17 @@
 }
 
 .sighting-report-form__features-section {
-  max-width: 52rem;
+  width: 100%;
 }
 
 .sighting-report-form__feature-groups {
   display: grid;
-  border-top: var(--border-width-default) solid var(--color-border);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: var(--space-8);
 }
 
 .sighting-report-form__feature-group {
   padding: var(--space-4) 0;
-  border-bottom: var(--border-width-default) solid var(--color-border);
 }
 
 .sighting-report-form__feature-group legend {
@@ -420,6 +421,10 @@
   }
 
   .sighting-report-form__event-fields {
+    grid-template-columns: 1fr;
+  }
+
+  .sighting-report-form__feature-groups {
     grid-template-columns: 1fr;
   }
 }

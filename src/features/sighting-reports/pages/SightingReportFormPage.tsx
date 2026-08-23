@@ -92,7 +92,7 @@ export function SightingReportFormPage({ onSubmit }: SightingReportFormPageProps
     initialEventDate: getTodayDateInputValue(),
     initialSize: 'MEDIUM',
   })
-  const canSubmit = title.trim() !== '' && form.isComplete
+  const canSubmit = title.trim() !== '' && photos.length > 0 && form.isComplete
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -149,7 +149,11 @@ export function SightingReportFormPage({ onSubmit }: SightingReportFormPageProps
             </span>
           </div>
           <h1>{step === 1 ? '목격한 동물의 사진을 올려주세요' : '기억나는 특징을 골라주세요'}</h1>
-          <p>{step === 1 ? '' : '기억나는 부위만 골라주세요. 모두 채우지 않아도 돼요.'}</p>
+          <p>
+            {step === 1
+              ? ''
+              : '모두 건너뛰어도 등록돼요. 고른 특징은 보호자가 찾을 때 검색 조건으로 쓰여요.'}
+          </p>
         </header>
 
         <form className="sighting-report-form" id="sighting-report-form" onSubmit={handleSubmit}>
@@ -332,16 +336,9 @@ export function SightingReportFormPage({ onSubmit }: SightingReportFormPageProps
 
           {step === 2 && (
             <section
-              aria-labelledby="sighting-features-heading"
+              aria-label="동물 특징"
               className="sighting-report-form__section sighting-report-form__features-section"
             >
-              <div>
-                <h2 id="sighting-features-heading">동물 특징</h2>
-                <p className="sighting-report-form__help">
-                  기억나는 부위만 골라주세요. 모두 채우지 않아도 돼요.
-                </p>
-              </div>
-
               <div className="sighting-report-form__feature-groups">
                 {DETAIL_FEATURE_GROUPS.map((group) => (
                   <fieldset className="sighting-report-form__feature-group" key={group.category}>

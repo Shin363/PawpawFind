@@ -1,7 +1,29 @@
 import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
+import type { ReportLocationPickerProps } from '@/features/report-location'
+import { DEFAULT_REPORT_LOCATION } from '@/types/report'
 import { SightingReportFormPage } from './SightingReportFormPage'
+
+vi.mock('@/features/report-location', () => ({
+  ReportLocationPicker: ({ heading, onValueChange, value }: ReportLocationPickerProps) => (
+    <div>
+      <button
+        onClick={() =>
+          onValueChange({
+            happenPlace: '서울 마포구 연남동',
+            latitude: '37.5665',
+            longitude: '126.978',
+          })
+        }
+        type="button"
+      >
+        {heading} 테스트 위치 선택
+      </button>
+      <span data-testid="test-location-value">{value.happenPlace}</span>
+    </div>
+  ),
+}))
 
 type User = ReturnType<typeof userEvent.setup>
 
@@ -16,10 +38,7 @@ function getTodayDateInputValue() {
 
 async function fillRequiredStepOne(user: User) {
   await user.type(screen.getByRole('textbox', { name: /제목/ }), '연남동에서 강아지를 봤어요')
-  await user.click(screen.getByRole('button', { name: '입력' }))
-  await user.type(screen.getByRole('textbox', { name: /장소명 또는 주소/ }), '서울 마포구 연남동')
-  await user.type(screen.getByRole('spinbutton', { name: /위도/ }), '37.5665')
-  await user.type(screen.getByRole('spinbutton', { name: /경도/ }), '126.978')
+  await user.click(screen.getByRole('button', { name: '발견 장소 테스트 위치 선택' }))
   const eventDateInput = screen.getByLabelText(/^발견 날짜\s*\*$/)
   await user.clear(eventDateInput)
   await user.type(eventDateInput, '2026-08-23')
@@ -30,6 +49,10 @@ async function fillRequiredStepOne(user: User) {
 
 async function goToFeatureStep(user: User) {
   await fillRequiredStepOne(user)
+  await user.upload(
+    screen.getByLabelText('목격 사진 선택'),
+    new File(['photo'], 'required-photo.jpg', { type: 'image/jpeg' }),
+  )
   await user.click(screen.getByRole('button', { name: '다음 · 특징 고르기' }))
 }
 
@@ -52,6 +75,9 @@ describe('SightingReportFormPage', () => {
     expect(screen.getByLabelText('목격 사진 선택')).toHaveAttribute('accept', 'image/*')
     expect(screen.getByLabelText('목격 사진 선택')).toHaveAttribute('multiple')
     expect(screen.getByLabelText(/^발견 날짜\s*\*$/)).toHaveValue(getTodayDateInputValue())
+    expect(screen.getByTestId('test-location-value')).toHaveTextContent(
+      DEFAULT_REPORT_LOCATION.happenPlace,
+    )
     expect(screen.queryByRole('textbox', { name: '상세 설명' })).not.toBeInTheDocument()
     expect(screen.queryByRole('group', { name: '귀' })).not.toBeInTheDocument()
 
@@ -61,20 +87,6 @@ describe('SightingReportFormPage', () => {
     expect(whiteChip.querySelector('.sighting-report-form__color-swatch')).toHaveStyle({
       backgroundColor: '#ffffff',
     })
-  })
-
-  it('+버튼으로도 장소명 입력 영역을 연다', async () => {
-    const user = userEvent.setup()
-    render(<SightingReportFormPage />)
-
-    const addPlaceButton = screen.getByRole('button', { name: '장소명 입력 열기' })
-    expect(addPlaceButton).toHaveAttribute('aria-expanded', 'false')
-    expect(screen.queryByRole('textbox', { name: /장소명 또는 주소/ })).not.toBeInTheDocument()
-
-    await user.click(addPlaceButton)
-
-    expect(addPlaceButton).toHaveAttribute('aria-expanded', 'true')
-    expect(screen.getByRole('textbox', { name: /장소명 또는 주소/ })).toBeInTheDocument()
   })
 
   it('필수값과 선택한 특징을 2단계에서 서버 코드 구조로 전달한다', async () => {
@@ -127,6 +139,21 @@ describe('SightingReportFormPage', () => {
     })
   })
 
+  it('제목·사진·기본 정보·위치·날짜·색상을 모두 입력하면 다음 버튼을 활성화한다', async () => {
+    const user = userEvent.setup()
+    const photo = new File(['photo'], 'required-photo.jpg', { type: 'image/jpeg' })
+    render(<SightingReportFormPage />)
+
+    const nextButton = screen.getByRole('button', { name: '다음 · 특징 고르기' })
+    await fillRequiredStepOne(user)
+
+    expect(nextButton).toBeDisabled()
+
+    await user.upload(screen.getByLabelText('목격 사진 선택'), photo)
+
+    expect(nextButton).toBeEnabled()
+  })
+
   it('이전 단계로 돌아가도 입력값을 유지한다', async () => {
     const user = userEvent.setup()
     render(<SightingReportFormPage />)
@@ -135,7 +162,7 @@ describe('SightingReportFormPage', () => {
     await user.click(screen.getByRole('button', { name: /이전 단계/ }))
 
     expect(screen.getByRole('textbox', { name: /제목/ })).toHaveValue('연남동에서 강아지를 봤어요')
-    expect(screen.getAllByText('서울 마포구 연남동')).toHaveLength(2)
+    expect(screen.getByTestId('test-location-value')).toHaveTextContent('서울 마포구 연남동')
   })
 
   it('단일 선택 특징은 다른 값을 누르면 선택을 바로 교체한다', async () => {
@@ -162,6 +189,15 @@ describe('SightingReportFormPage', () => {
     const user = userEvent.setup()
     render(<SightingReportFormPage />)
     await goToFeatureStep(user)
+
+    expect(screen.getByRole('heading', { name: '기억나는 특징을 골라주세요' })).toBeInTheDocument()
+    expect(
+      screen.getByText(
+        '모두 건너뛰어도 등록돼요. 고른 특징은 보호자가 찾을 때 검색 조건으로 쓰여요.',
+      ),
+    ).toBeInTheDocument()
+    expect(screen.queryByRole('heading', { name: '동물 특징' })).not.toBeInTheDocument()
+    expect(screen.getByRole('region', { name: '동물 특징' })).toBeInTheDocument()
 
     const expectedGroups = [
       ['털 길이', ['짧음', '중간', '김', '짧게 깎임', '엉킴']],
