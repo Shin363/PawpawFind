@@ -136,6 +136,7 @@ shadow는 surface의 높이 체계가 합의되기 전까지 토큰으로 구현
 | Selectable chip   | 필터, 특징, 색상, 결과 출처에서 선택 상태 반복                     | single/multi/removable 계약을 분리해 spec 검토   |
 | Text input        | 제보 제목과 닉네임 입력에서 반복                                   | label, invalid, help text 근거를 더 모은 뒤 승격 |
 | Segmented control | 동물 종류와 크기 선택에서 반복                                     | form 단일 선택 primitive 후보                    |
+| Time band select  | 목격 제보와 실종 동물 찾기의 시간대 선택에서 반복                  | 단일 선택 custom dropdown으로 구현               |
 | Photo slot        | 제보 등록과 우리 아이 찾기에서 같은 3-slot 구조 반복               | 실제 file input 계약 확정 전 feature-local 유지  |
 | Dialog/sheet      | 로그인에서 overlay와 bottom sheet 사용                             | 한 사례뿐이므로 feature-local 유지               |
 | Drawer            | 앱 메뉴 한 사례                                                    | app shell에 유지                                 |
@@ -167,6 +168,7 @@ border, radius뿐입니다.
 | 목격 제보 지도 | map, map pin, selected sighting preview, nearby sighting list                 |
 | 목격 제보 목록 | filter panel, active filter list, sighting list item, pagination              |
 | 목격 제보 상세 | detail summary, information rows, location map, predicted route               |
+| 제보 위치 선택 | Kakao map, fixed center pin, reverse geocoding, manual fallback               |
 | 목격 제보 등록 | photo section, animal attributes, feature selector, completion view           |
 | 우리 아이 찾기 | search form, analysis progress, result filter, candidate item, compare slider |
 | 인증           | login sheet, provider actions                                                 |
@@ -185,7 +187,7 @@ Feature 이름과 URL은 이 감사 문서에서 확정하지 않습니다. 제�
 - 긴 제목·지역명·태그와 이미지 오류
 - 모바일·태블릿·데스크톱 breakpoint별 결과
 - dark mode 필요 여부
-- 실제 지도 SDK loading과 failure
+- 카카오 지도 SDK의 실제 발급 키·등록 도메인에서 loading, 인증 실패와 할당량 초과 상태
 
 이 상태를 추측해서 public props로 추가하지 않습니다. 기능 요구사항 또는 추가 디자인을 확보한 뒤
 spec에 반영합니다.
