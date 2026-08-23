@@ -18,6 +18,23 @@ describe('appRoutes', () => {
     expect(screen.getByRole('heading', { name: 'PawpawFind' })).toBeInTheDocument()
   })
 
+  it('미인증 사용자가 우리 아이 찾기를 누르면 카카오 로그인 창을 보여준다', async () => {
+    const user = userEvent.setup()
+    const router = renderRoute('/')
+
+    await user.click(screen.getByRole('link', { name: '우리 아이 찾기' }))
+
+    expect(router.state.location.pathname).toBe('/')
+    expect(
+      screen.getByRole('heading', { name: '우리 아이 찾기는 로그인이 필요해요' }),
+    ).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: '카카오로 계속하기' })).toHaveFocus()
+    expect(screen.queryByRole('button', { name: /Google/ })).not.toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: '나중에 하기' }))
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+  })
+
   it('목격 제보 목록을 공개 경로로 렌더링한다', () => {
     renderRoute('/sightings')
     expect(screen.getByRole('heading', { name: '목격 제보 목록' })).toBeInTheDocument()
@@ -52,6 +69,7 @@ describe('appRoutes', () => {
       authRequired: true,
       returnTo: '/find/results/search-1',
     })
+    expect(screen.getByRole('dialog')).toHaveTextContent('카카오로 계속하기')
   })
 
   it('등록되지 않은 경로에 404 화면을 렌더링한다', () => {
