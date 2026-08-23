@@ -23,13 +23,10 @@ export const StepTwo = {
       canvas.getByRole('textbox', { name: /제목/ }),
       '연남동 골목에서 갈색 중형견 봤어요',
     )
-    await userEvent.click(canvas.getByRole('button', { name: '입력' }))
-    await userEvent.type(
-      canvas.getByRole('textbox', { name: /장소명 또는 주소/ }),
-      '서울 마포구 연남동',
+    await userEvent.upload(
+      canvas.getByLabelText('목격 사진 선택'),
+      new File(['sighting-photo'], 'sighting-story.jpg', { type: 'image/jpeg' }),
     )
-    await userEvent.type(canvas.getByRole('spinbutton', { name: /위도/ }), '37.5665')
-    await userEvent.type(canvas.getByRole('spinbutton', { name: /경도/ }), '126.978')
     const eventDateInput = canvas.getByLabelText(/^발견 날짜\s*\*$/)
     await userEvent.clear(eventDateInput)
     await userEvent.type(eventDateInput, '2026-08-23')
