@@ -107,7 +107,11 @@ export function SightingReportListPage() {
             </button>
           )}
         </div>
-        {isPending && <p role="status">목격 제보를 불러오는 중입니다.</p>}
+        {isPending && (
+          <p className="report-list-page__feedback" role="status">
+            목격 제보를 불러오는 중입니다.
+          </p>
+        )}
         {isError && (
           <div role="alert" className="report-list-page__feedback">
             <p>목격 제보를 불러오지 못했습니다.</p>

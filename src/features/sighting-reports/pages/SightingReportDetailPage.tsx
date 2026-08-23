@@ -14,7 +14,9 @@ export function SightingReportDetailPage() {
   if (isPending)
     return (
       <main className="report-detail-page">
-        <p role="status">목격 제보를 불러오는 중입니다.</p>
+        <p className="report-detail-page__feedback" role="status">
+          목격 제보를 불러오는 중입니다.
+        </p>
       </main>
     )
   if (isError || !report)
