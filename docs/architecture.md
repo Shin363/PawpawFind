@@ -20,7 +20,7 @@ provider를 이곳에서 관리하며 feature 내부 구현을 다시 export하�
 
 ## 코드 배치 기준
 
-### Feature first
+### Feature first(FSD)
 
 페이지, 기능 전용 컴포넌트, 기능 전용 훅과 API는 `src/features/<feature>`에 먼저 둡니다. 한 곳에서만
 사용하는 코드를 재사용 가능할 것이라는 예상만으로 공용 영역에 올리지 않습니다.
