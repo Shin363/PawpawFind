@@ -32,6 +32,7 @@ PawpawFind의 foundation과 공용 UI 경계를 정의합니다. 구체적인 �
 
 | 범주     | 이름과 값                                                                             | 사용 목적과 근거                                                          |
 | -------- | ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| color    | `--color-accent-text: #b45309`                                                        | 흰 배경 위 단계 표시·선택 표시·위치 상태 안내에 반복되는 진한 주황 텍스트 |
 | disabled | `--color-disabled: #c3c8cf`                                                           | 와이어프레임의 비활성 pagination과 여러 control의 비활성 텍스트           |
 | control  | `--control-height: 44px`                                                              | Button medium, 입력, segmented option의 최소 키보드·터치 영역             |
 | border   | `--border-width-default: 1px`                                                         | control과 feature surface의 기본 구분선 두께                              |
