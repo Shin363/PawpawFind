@@ -1,7 +1,8 @@
 import type {
+  ReportFeatureApiItem,
   ReportListApiItem,
   ReportListApiResponse,
-  SightingReportDetail,
+  ReportPhotoApiItem,
 } from '@/features/sighting-reports/types'
 import sampleCatImage from '@/assets/sighting-report-mocks/sample-cat.png'
 import sampleDogImage from '@/assets/sighting-report-mocks/sample-dog.png'
@@ -43,7 +44,6 @@ export const sightingReportApiItems: ReportListApiItem[] = reportSeeds.map(
       status: 'OPEN',
       createdAt: `2026-08-${day}T12:00:00.000Z`,
       updatedAt: `2026-08-${day}T12:00:00.000Z`,
-      thumbnailUrl: species === 'DOG' ? sampleDogImage : sampleCatImage,
     }
   },
 )
@@ -79,54 +79,33 @@ export function createSightingReportsPage(page: number, size: number): ReportLis
 
 export const sightingReportsFixture = createSightingReportsPage(0, 10)
 
-export const sightingReportDetailsFixture: Record<string, SightingReportDetail> = {
-  '1': {
-    id: '1',
-    title: '연남동 골목에서 갈색 중형견 봤어요',
-    speciesLabel: '강아지',
-    colorText: '갈색, 흰색',
-    sizeLabel: '중형',
-    areaText: '서울 마포구 연남동',
-    dateText: '2026.08.23',
-    timeBandText: '14–16시',
-    coatLengthLabel: '중간',
-    wearingText: '목줄 없음',
-    behaviorText: '겁이 많음',
-    photos: [
-      {
-        id: 'photo-1',
-        url: sampleDogImage,
-        alt: '주황색과 흰색 무늬가 있는 강아지 예시 사진',
-      },
-      {
-        id: 'photo-2',
-        url: sampleCatImage,
-        alt: '주황색과 흰색 무늬가 있는 고양이 예시 사진',
-      },
-    ],
-    location: { lat: 37.5621, lng: 126.9253, radiusM: 300 },
-    predictedRoute: [
-      {
-        id: 'route-1',
-        areaText: '서울 마포구 연남동',
-        dateTimeText: '2026.08.23 14–16시',
-        description: '첫 목격 지점',
-        kind: 'reported',
-      },
-      {
-        id: 'route-2',
-        areaText: '서울 마포구 서교동',
-        dateTimeText: '2026.08.23 18–20시',
-        description: '다른 제보와 특징이 일치',
-        kind: 'matched',
-      },
-      {
-        id: 'route-3',
-        areaText: '서울 마포구 동교동 방향',
-        dateTimeText: '2026.08.24 예상',
-        description: '이동 방향으로 추정',
-        kind: 'predicted',
-      },
-    ],
-  },
+export const sightingReportPhotosFixture: Record<string, ReportPhotoApiItem[]> = {
+  '1': [
+    {
+      id: 1,
+      reportId: 1,
+      photoUrl: sampleDogImage,
+      createdAt: '2026-08-23T12:00:00.000Z',
+      updatedAt: '2026-08-23T12:00:00.000Z',
+      sortOrder: 1,
+    },
+    {
+      id: 2,
+      reportId: 1,
+      photoUrl: sampleCatImage,
+      createdAt: '2026-08-23T12:00:00.000Z',
+      updatedAt: '2026-08-23T12:00:00.000Z',
+      sortOrder: 2,
+    },
+  ],
+}
+
+export const sightingReportFeaturesFixture: Record<string, ReportFeatureApiItem[]> = {
+  '1': [
+    { id: 1, reportId: 1, category: '털색', keyword: '갈색' },
+    { id: 2, reportId: 1, category: '털색', keyword: '흰색' },
+    { id: 3, reportId: 1, category: '털길이', keyword: '중간' },
+    { id: 4, reportId: 1, category: '착용 중', keyword: '목줄 없음' },
+    { id: 5, reportId: 1, category: '행동', keyword: '겁이 많음' },
+  ],
 }

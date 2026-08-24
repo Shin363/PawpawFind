@@ -1,14 +1,32 @@
 import { delay, http, HttpResponse } from 'msw'
-import { SIGHTING_REPORTS_API_PATH } from '@/features/sighting-reports/api/sightingReports.api'
+import {
+  REPORT_FEATURES_API_PATH,
+  REPORT_PHOTOS_API_PATH,
+  SIGHTING_REPORTS_API_PATH,
+} from '@/features/sighting-reports/api/sightingReports.api'
 import {
   createSightingReportsPage,
-  sightingReportDetailsFixture,
+  sightingReportApiItems,
+  sightingReportFeaturesFixture,
+  sightingReportPhotosFixture,
 } from '@/mocks/fixtures/sightingReports'
 
 export const sightingReportsHandlers = [
+  http.get(`*${REPORT_PHOTOS_API_PATH}`, async ({ request }) => {
+    await delay(100)
+    const reportId = new URL(request.url).searchParams.get('reportId') ?? ''
+    return HttpResponse.json(sightingReportPhotosFixture[reportId] ?? [])
+  }),
+  http.get(`*${REPORT_FEATURES_API_PATH}`, async ({ request }) => {
+    await delay(100)
+    const reportId = new URL(request.url).searchParams.get('reportId') ?? ''
+    return HttpResponse.json(sightingReportFeaturesFixture[reportId] ?? [])
+  }),
   http.get(`*${SIGHTING_REPORTS_API_PATH}/:sightingId`, async ({ params }) => {
     await delay(100)
-    const report = sightingReportDetailsFixture[String(params.sightingId)]
+    const report = sightingReportApiItems.find(
+      (item) => item.reportId === Number(params.sightingId),
+    )
     return report
       ? HttpResponse.json(report)
       : HttpResponse.json({ message: '목격 제보를 찾을 수 없습니다.' }, { status: 404 })

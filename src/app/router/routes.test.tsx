@@ -58,7 +58,9 @@ describe('appRoutes', () => {
     await user.click(screen.getByRole('button', { name: '다음 사진' }))
     expect(screen.getByText('2 / 2')).toBeInTheDocument()
     expect(
-      screen.getByRole('img', { name: '주황색과 흰색 무늬가 있는 고양이 예시 사진' }),
+      screen.getByRole('img', {
+        name: '연남동 골목에서 갈색 중형견 봤어요 제보 사진 2',
+      }),
     ).toBeInTheDocument()
   })
 
