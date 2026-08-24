@@ -13,5 +13,8 @@ describe('routeUrls', () => {
       '/sightings/report%2F%ED%95%9C%EA%B8%80',
     )
     expect(routeUrls.missingAnimalSearchResult('search 1')).toBe('/find/results/search%201')
+    expect(routeUrls.shelterNoticeDetail('notice/한글')).toBe(
+      '/shelter-notices/notice%2F%ED%95%9C%EA%B8%80',
+    )
   })
 })

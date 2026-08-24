@@ -1,11 +1,12 @@
 import type { RouteObject } from 'react-router'
 import { HomePage } from '@/features/home'
 import {
-  MissingAnimalSearchFormPage,
+  MissingAnimalSearchFlowPage,
   MissingAnimalSearchLandingPage,
   MissingAnimalSearchResultPage,
 } from '@/features/missing-animal-search'
 import { MyPage } from '@/features/my-page'
+import { ShelterNoticeDetailPage } from '@/features/shelter-notices'
 import { SightingReportDetailPage, SightingReportListPage } from '@/features/sighting-reports'
 import { RequireAuth } from './guards/RequireAuth'
 import { AppLayout } from './layouts/AppLayout'
@@ -36,25 +37,24 @@ export const appRoutes: RouteObject[] = [
         Component: SightingReportDetailPage,
       },
       {
+        path: ROUTE_PATHS.MISSING_ANIMAL_SEARCH,
+        Component: MissingAnimalSearchLandingPage,
+      },
+      {
+        path: ROUTE_PATHS.MISSING_ANIMAL_SEARCH_FORM,
+        Component: MissingAnimalSearchFlowPage,
+      },
+      {
+        path: ROUTE_PATHS.MISSING_ANIMAL_SEARCH_RESULT,
+        Component: MissingAnimalSearchResultPage,
+      },
+      {
+        path: ROUTE_PATHS.SHELTER_NOTICE_DETAIL,
+        Component: ShelterNoticeDetailPage,
+      },
+      {
         Component: RequireAuth,
-        children: [
-          {
-            path: ROUTE_PATHS.MISSING_ANIMAL_SEARCH,
-            Component: MissingAnimalSearchLandingPage,
-          },
-          {
-            path: ROUTE_PATHS.MISSING_ANIMAL_SEARCH_FORM,
-            Component: MissingAnimalSearchFormPage,
-          },
-          {
-            path: ROUTE_PATHS.MISSING_ANIMAL_SEARCH_RESULT,
-            Component: MissingAnimalSearchResultPage,
-          },
-          {
-            path: ROUTE_PATHS.MY_PAGE,
-            Component: MyPage,
-          },
-        ],
+        children: [{ path: ROUTE_PATHS.MY_PAGE, Component: MyPage }],
       },
       {
         path: '*',

@@ -1,5 +1,6 @@
 export {
   MissingAnimalSearchFormPage,
+  MissingAnimalSearchFlowPage,
   MissingAnimalSearchLandingPage,
   MissingAnimalSearchResultPage,
 } from './pages'

@@ -6,6 +6,7 @@ export const ROUTE_PATHS = {
   MISSING_ANIMAL_SEARCH: '/find',
   MISSING_ANIMAL_SEARCH_FORM: '/find/new',
   MISSING_ANIMAL_SEARCH_RESULT: '/find/results/:searchId',
+  SHELTER_NOTICE_DETAIL: '/shelter-notices/:noticeId',
   MY_PAGE: '/mypage',
 } as const
 
@@ -17,5 +18,6 @@ export const routeUrls = {
   missingAnimalSearch: () => ROUTE_PATHS.MISSING_ANIMAL_SEARCH,
   missingAnimalSearchForm: () => ROUTE_PATHS.MISSING_ANIMAL_SEARCH_FORM,
   missingAnimalSearchResult: (searchId: string) => `/find/results/${encodeURIComponent(searchId)}`,
+  shelterNoticeDetail: (noticeId: string) => `/shelter-notices/${encodeURIComponent(noticeId)}`,
   myPage: () => ROUTE_PATHS.MY_PAGE,
 } as const
