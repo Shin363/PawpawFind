@@ -39,7 +39,6 @@ export function MissingAnimalSearchFlowPage() {
         <h1 id="analysis-title">비슷한 동물을 찾고 있어요</h1>
         <div className="missing-animal-analysis__photo">
           <img alt="찾고 있는 실종 동물" src={previewUrl} />
-          <span aria-hidden="true" />
         </div>
         <div
           aria-label="유사 동물 검색 중"
