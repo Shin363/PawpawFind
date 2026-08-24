@@ -54,6 +54,10 @@
   border-radius: 50%;
   color: var(--color-text-tertiary) !important;
 }
+.app-header__mypage svg {
+  width: 21px;
+  height: 21px;
+}
 @media (max-width: 520px) {
   .app-header__inner {
     flex-wrap: wrap;
