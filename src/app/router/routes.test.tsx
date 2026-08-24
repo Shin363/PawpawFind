@@ -15,7 +15,19 @@ function renderRoute(initialEntry: string) {
 describe('appRoutes', () => {
   it('홈 경로를 렌더링한다', () => {
     renderRoute('/')
-    expect(screen.getByRole('heading', { name: 'PawpawFind' })).toBeInTheDocument()
+    expect(
+      screen.getByRole('heading', {
+        name: '잃어버린 반려동물을 AI 외형예측과 주변 제보를 통해 다시 찾아보세요',
+      }),
+    ).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: '사진으로 실종동물 찾기' })).toHaveAttribute(
+      'href',
+      '/find',
+    )
+    expect(screen.getByRole('link', { name: '동물을 발견했어요' })).toHaveAttribute(
+      'href',
+      '/sightings/new',
+    )
   })
 
   it('미인증 사용자가 실종 동물 찾기를 누르면 카카오 로그인 창을 보여준다', async () => {
