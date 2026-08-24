@@ -26,13 +26,7 @@ export function AppLayout() {
       <header className="app-header">
         <div className="app-header__inner">
           <NavLink className="app-header__brand" to={routeUrls.home()}>
-            <svg aria-hidden="true" className="app-brand-mark" viewBox="0 0 32 32">
-              <ellipse cx="8.4" cy="10.2" rx="3.2" ry="4.2" />
-              <ellipse cx="15.8" cy="7.8" rx="3.2" ry="4.2" />
-              <ellipse cx="23.4" cy="10.2" rx="3.2" ry="4.2" />
-              <path d="M16 14.7c5.2 0 9.4 3.7 9.4 8.2 0 3.2-2.7 5.1-5.8 5.1-1.5 0-2.5-.6-3.6-.6s-2.1.6-3.6.6c-3.1 0-5.8-1.9-5.8-5.1 0-4.5 4.2-8.2 9.4-8.2Z" />
-            </svg>
-            <span>PawPawFind</span>
+            <span aria-hidden="true">🐾</span> PawPawFind
           </NavLink>
           <nav aria-label="주요 메뉴">
             <NavLink end to={routeUrls.sightingReports()}>
@@ -63,13 +57,7 @@ export function AppLayout() {
           <div className="app-footer__main">
             <div className="app-footer__summary">
               <Link className="app-footer__brand" to={routeUrls.home()}>
-                <svg aria-hidden="true" className="app-brand-mark" viewBox="0 0 32 32">
-                  <ellipse cx="8.4" cy="10.2" rx="3.2" ry="4.2" />
-                  <ellipse cx="15.8" cy="7.8" rx="3.2" ry="4.2" />
-                  <ellipse cx="23.4" cy="10.2" rx="3.2" ry="4.2" />
-                  <path d="M16 14.7c5.2 0 9.4 3.7 9.4 8.2 0 3.2-2.7 5.1-5.8 5.1-1.5 0-2.5-.6-3.6-.6s-2.1.6-3.6.6c-3.1 0-5.8-1.9-5.8-5.1 0-4.5 4.2-8.2 9.4-8.2Z" />
-                </svg>
-                PawPawFind
+                <span aria-hidden="true">🐾</span> PawPawFind
               </Link>
               <p>잃어버린 반려동물을 보호소 공고와 이웃의 목격 제보로 함께 찾습니다.</p>
             </div>

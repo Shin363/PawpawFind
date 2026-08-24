@@ -25,12 +25,6 @@
   font-size: var(--font-size-md);
   font-weight: 700;
 }
-.app-brand-mark {
-  flex: none;
-  width: 32px;
-  height: 32px;
-  fill: var(--color-accent);
-}
 .app-header nav {
   display: flex;
   gap: 22px;
@@ -91,11 +85,6 @@
   color: var(--color-text-primary);
   font-weight: 700;
   text-decoration: none;
-}
-
-.app-footer__brand .app-brand-mark {
-  width: 28px;
-  height: 28px;
 }
 
 .app-footer__summary p {

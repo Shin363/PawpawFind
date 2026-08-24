@@ -220,12 +220,6 @@
   .home-hero__actions .home-pill-button {
     width: 100%;
   }
-  .home-match-preview {
-    grid-template-columns: 1fr;
-  }
-  .home-match-preview__original {
-    grid-row: auto;
-  }
   .home-final-cta .home-pill-button {
     width: 100%;
   }
