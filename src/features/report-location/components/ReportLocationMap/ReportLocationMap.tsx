@@ -9,6 +9,7 @@ interface ReportLocationMapProps {
   longitude: number
   radiusM?: number
   appKey?: string
+  interactive?: boolean
 }
 
 type MapState = 'loading' | 'ready' | 'missing-key' | 'error'
@@ -19,6 +20,7 @@ export function ReportLocationMap({
   latitude,
   longitude,
   radiusM = 0,
+  interactive = true,
 }: ReportLocationMapProps) {
   const resolvedAppKey = appKey ?? import.meta.env.VITE_KAKAO_MAP_APP_KEY ?? ''
   const [mapState, setMapState] = useState<MapState>(resolvedAppKey ? 'loading' : 'missing-key')
@@ -41,7 +43,15 @@ export function ReportLocationMap({
       .then((maps) => {
         if (!active) return
         const position = new maps.LatLng(latitude, longitude)
-        const map = new maps.Map(container, { center: position, level: 4 })
+        const map = new maps.Map(container, {
+          center: position,
+          level: 4,
+          draggable: interactive,
+          scrollwheel: interactive,
+          disableDoubleClick: !interactive,
+          disableDoubleClickZoom: !interactive,
+          keyboardShortcuts: interactive,
+        })
         if (maps.Marker) marker = new maps.Marker({ map, position })
         if (radiusM > 0 && maps.Circle) {
           circle = new maps.Circle({
@@ -66,7 +76,7 @@ export function ReportLocationMap({
       marker?.setMap(null)
       circle?.setMap(null)
     }
-  }, [latitude, longitude, radiusM, resolvedAppKey])
+  }, [interactive, latitude, longitude, radiusM, resolvedAppKey])
 
   const statusText =
     mapState === 'loading'

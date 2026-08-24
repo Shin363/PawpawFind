@@ -108,5 +108,9 @@ export const sightingReportFeaturesFixture: Record<string, ReportFeatureApiItem[
     { id: 3, reportId: 1, category: '털길이', keyword: '중간' },
     { id: 4, reportId: 1, category: '착용 중', keyword: '목줄 없음' },
     { id: 5, reportId: 1, category: '행동', keyword: '겁이 많음' },
+    { id: 6, reportId: 1, category: '귀', keyword: '접힌 귀' },
+    { id: 7, reportId: 1, category: '꼬리', keyword: '말림' },
+    { id: 8, reportId: 1, category: '눈/얼굴', keyword: '눈 색 다름' },
+    { id: 9, reportId: 1, category: '몸 상태', keyword: '다리 절뚝임' },
   ],
 }

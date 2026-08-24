@@ -6,6 +6,11 @@ interface KakaoLatLng {
 interface KakaoMapOptions {
   center: KakaoLatLng
   level: number
+  draggable?: boolean
+  scrollwheel?: boolean
+  disableDoubleClick?: boolean
+  disableDoubleClickZoom?: boolean
+  keyboardShortcuts?: boolean
 }
 
 interface KakaoMap {

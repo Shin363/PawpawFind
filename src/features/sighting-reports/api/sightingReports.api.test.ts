@@ -3,6 +3,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import { server } from '@/mocks/server'
 import {
   createSightingReport,
+  getSightingReport,
   PRESIGN_UPLOAD_API_PATH,
   REPORT_FEATURES_API_PATH,
   REPORT_PHOTOS_API_PATH,
@@ -43,6 +44,21 @@ describe('sightingReports API mapper', () => {
       dateText: '2026.08.24',
       thumbnailUrl: 'https://cdn.example.com/reports/17-thumbnail.jpg',
     })
+  })
+
+  it('상세 응답의 모든 특징을 API 카테고리별로 묶어 전달한다', async () => {
+    const report = await getSightingReport('1')
+
+    expect(report.features).toEqual([
+      { category: '털색', keywords: ['갈색', '흰색'] },
+      { category: '털길이', keywords: ['중간'] },
+      { category: '착용 중', keywords: ['목줄 없음'] },
+      { category: '행동', keywords: ['겁이 많음'] },
+      { category: '귀', keywords: ['접힌 귀'] },
+      { category: '꼬리', keywords: ['말림'] },
+      { category: '눈/얼굴', keywords: ['눈 색 다름'] },
+      { category: '몸 상태', keywords: ['다리 절뚝임'] },
+    ])
   })
 
   it('제보를 만든 뒤 사진을 업로드하고 사진·특징을 생성한다', async () => {

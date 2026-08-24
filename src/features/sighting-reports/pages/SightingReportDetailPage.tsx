@@ -39,15 +39,14 @@ export function SightingReportDetailPage({ reportType = 'FOUND' }: SightingRepor
       </main>
     )
 
-  const details = [
+  const details: [string, string][] = [
     ['동물 종류', report.speciesLabel],
-    ['색상', report.colorText],
     ['크기', report.sizeLabel],
     [isLostReport ? '실종 장소' : '발견 장소', report.areaText],
     [isLostReport ? '실종 시간' : '발견 시간', `${report.dateText} ${report.timeBandText}`],
-    ['털 길이', report.coatLengthLabel],
-    ['착용 중', report.wearingText],
-    ['행동', report.behaviorText],
+    ...report.features.map(
+      ({ category, keywords }) => [category, keywords.join(', ')] as [string, string],
+    ),
   ]
   const selectedPhoto = report.photos[selectedPhotoIndex]
   const galleryItemCount = report.photos.length || 3
@@ -131,7 +130,7 @@ export function SightingReportDetailPage({ reportType = 'FOUND' }: SightingRepor
         </section>
         <section className="report-detail-page__content">
           <header>
-            <h1>{report.title}</h1>
+            {!isLostReport && <h1>{report.title}</h1>}
             <span className="report-detail-page__badge">
               <svg aria-hidden="true" fill="none" viewBox="0 0 24 24">
                 <path d="M12 20.5s6.4-5.6 6.4-10.1a6.4 6.4 0 0 0-12.8 0c0 4.5 6.4 10.1 6.4 10.1Z" />
@@ -152,6 +151,7 @@ export function SightingReportDetailPage({ reportType = 'FOUND' }: SightingRepor
             <h2 id="location-title">{isLostReport ? '실종 위치' : '발견 위치'}</h2>
             <ReportLocationMap
               areaText={report.areaText}
+              interactive={false}
               latitude={report.location.lat}
               longitude={report.location.lng}
               radiusM={report.location.radiusM}

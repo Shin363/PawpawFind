@@ -78,9 +78,7 @@ export interface ReportListApiResponse {
 
 export interface SightingReportDetail extends SightingReportListItem {
   timeBandText: string
-  coatLengthLabel: string
-  wearingText: string
-  behaviorText: string
+  features: { category: string; keywords: string[] }[]
   photos: { id: string; url: string; alt: string }[]
   location: {
     lat: number

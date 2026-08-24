@@ -32,6 +32,18 @@ function getFeatureText(features: ReportFeatureApiItem[], category: string) {
   return keywords.length > 0 ? keywords.join(', ') : '정보 없음'
 }
 
+function groupFeatures(features: ReportFeatureApiItem[]) {
+  const groups = new Map<string, string[]>()
+
+  features.forEach(({ category, keyword }) => {
+    const keywords = groups.get(category)
+    if (keywords) keywords.push(keyword)
+    else groups.set(category, [keyword])
+  })
+
+  return Array.from(groups, ([category, keywords]) => ({ category, keywords }))
+}
+
 function getTimeBandText(eventHour: number | null) {
   if (eventHour === null) return '시간 미상'
 
@@ -110,9 +122,7 @@ export async function getSightingReport(
     ...listItem,
     colorText: getFeatureText(features, '털색'),
     timeBandText: getTimeBandText(report.eventHour),
-    coatLengthLabel: getFeatureText(features, '털길이'),
-    wearingText: getFeatureText(features, '착용 중'),
-    behaviorText: getFeatureText(features, '행동'),
+    features: groupFeatures(features),
     photos: photos.map((photo, index) => ({
       id: String(photo.id),
       url: photo.photoUrl,
