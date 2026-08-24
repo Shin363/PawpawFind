@@ -1,5 +1,4 @@
 import { useEffect, useState, type ChangeEvent, type FormEvent } from 'react'
-import { ROUTE_PATHS } from '@/app/router/paths'
 import { Button } from '@/components/ui/button'
 import { SegmentedControl } from '@/components/ui/segmented-control'
 import { SelectableChip } from '@/components/ui/selectable-chip'
@@ -129,11 +128,7 @@ export function MissingAnimalSearchFormPage({ onSubmit }: MissingAnimalSearchFor
   return (
     <>
       <main className="missing-animal-form-page">
-        {step === 1 ? (
-          <a className="missing-animal-form__back" href={ROUTE_PATHS.MISSING_ANIMAL_SEARCH}>
-            <span aria-hidden="true">←</span> 실종 동물 찾기
-          </a>
-        ) : (
+        {step === 2 && (
           <button className="missing-animal-form__back" onClick={() => setStep(1)} type="button">
             <span aria-hidden="true">←</span> 이전 단계
           </button>
