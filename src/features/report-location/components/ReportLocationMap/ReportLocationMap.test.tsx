@@ -102,4 +102,58 @@ describe('ReportLocationMap', () => {
     expect(markerConstructor).toHaveBeenCalledOnce()
     expect(circleConstructor).toHaveBeenCalledWith(expect.objectContaining({ radius: 300 }))
   })
+
+  it('읽기 전용 지도에서는 이동과 확대 입력을 비활성화한다', async () => {
+    let mapOptions: KakaoMapOptions | undefined
+    class FakeLatLng implements KakaoLatLng {
+      getLat() {
+        return 37.56
+      }
+      getLng() {
+        return 126.92
+      }
+    }
+    class FakeMap implements KakaoMap {
+      constructor(_container: HTMLElement, options: KakaoMapOptions) {
+        mapOptions = options
+      }
+      getCenter() {
+        return mapOptions!.center
+      }
+      relayout() {
+        return undefined
+      }
+      setCenter() {
+        return undefined
+      }
+    }
+    vi.mocked(loadKakaoMaps).mockResolvedValue({
+      LatLng: FakeLatLng,
+      Map: FakeMap,
+      event: { addListener: () => undefined, removeListener: () => undefined },
+      load: (callback: () => void) => callback(),
+      services: { Geocoder: class {}, Status: { OK: 'OK' } },
+    } as unknown as KakaoMapsApi)
+
+    render(
+      <ReportLocationMap
+        appKey="key"
+        areaText="연남동"
+        interactive={false}
+        latitude={37.56}
+        longitude={126.92}
+      />,
+    )
+
+    await waitFor(() => expect(mapOptions).toBeDefined())
+    expect(mapOptions).toEqual(
+      expect.objectContaining({
+        draggable: false,
+        scrollwheel: false,
+        disableDoubleClick: true,
+        disableDoubleClickZoom: true,
+        keyboardShortcuts: false,
+      }),
+    )
+  })
 })

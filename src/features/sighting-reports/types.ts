@@ -16,21 +16,37 @@ export interface SightingReportListResponse {
 
 export interface ReportListApiItem {
   reportId: number
-  userId: number
+  thumbnailUrl: string | null
+  userId: number | null
   reportType: string
-  title: string
+  title: string | null
   species: string
   size: string
   eventDate: string
-  eventHour: number
+  eventHour: number | null
   happenPlace: string
   latitude: number
   longitude: number
-  description: string
+  description: string | null
   status: string
   createdAt: string
   updatedAt: string
-  thumbnailUrl?: string
+}
+
+export interface ReportPhotoApiItem {
+  id: number
+  reportId: number
+  photoUrl: string
+  createdAt: string
+  updatedAt: string
+  sortOrder: number
+}
+
+export interface ReportFeatureApiItem {
+  id: number
+  reportId: number
+  category: string
+  keyword: string
 }
 
 interface ReportPageSort {
@@ -62,9 +78,7 @@ export interface ReportListApiResponse {
 
 export interface SightingReportDetail extends SightingReportListItem {
   timeBandText: string
-  coatLengthLabel: string
-  wearingText: string
-  behaviorText: string
+  features: { category: string; keywords: string[] }[]
   photos: { id: string; url: string; alt: string }[]
   location: {
     lat: number

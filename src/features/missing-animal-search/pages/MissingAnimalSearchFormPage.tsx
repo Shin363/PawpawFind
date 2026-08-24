@@ -175,7 +175,7 @@ export function MissingAnimalSearchFormPage({ onSubmit }: MissingAnimalSearchFor
                       }
                     >
                       <input
-                        accept="image/*"
+                        accept="image/jpeg,image/png,image/webp"
                         aria-describedby="missing-photos-help"
                         aria-label="실종 동물 사진 선택"
                         disabled={photos.length >= MAX_MISSING_ANIMAL_PHOTOS}

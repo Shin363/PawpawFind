@@ -1,4 +1,4 @@
-import React from 'react'
+import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { App } from './app/App'
 import { AppProviders } from './app/providers/AppProviders'
@@ -12,11 +12,11 @@ async function bootstrap() {
   }
 
   createRoot(document.getElementById('root')!).render(
-    <React.StrictMode>
+    <StrictMode>
       <AppProviders>
         <App />
       </AppProviders>
-    </React.StrictMode>,
+    </StrictMode>,
   )
 }
 

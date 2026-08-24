@@ -15,6 +15,9 @@ source of truth로 사용하고, 이 파일에 중복해서 적지 않습니다.
 3. 기존 구현을 검색하고, 요청 범위를 넘어선 추상화나 리팩터링을 추가하지 않습니다.
 4. API 계약이 불명확하면 임의로 확정하지 않고 명시적인 mock 경계를 둡니다.
 
+백엔드 API를 새로 연결하거나 기존 계약을 변경할 때는
+`.claude/skills/backend-api-integration/SKILL.md`의 계약 동기화 흐름을 따릅니다.
+
 ## 구조 기준
 
 - `src/components`: 도메인, API, 라우트에 의존하지 않는 공용 UI

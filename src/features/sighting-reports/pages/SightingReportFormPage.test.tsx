@@ -72,7 +72,10 @@ describe('SightingReportFormPage', () => {
     expect(
       titleInput.compareDocumentPosition(photoHeading) & Node.DOCUMENT_POSITION_FOLLOWING,
     ).toBeTruthy()
-    expect(screen.getByLabelText('목격 사진 선택')).toHaveAttribute('accept', 'image/*')
+    expect(screen.getByLabelText('목격 사진 선택')).toHaveAttribute(
+      'accept',
+      'image/jpeg,image/png,image/webp',
+    )
     expect(screen.getByLabelText('목격 사진 선택')).toHaveAttribute('multiple')
     expect(screen.getByLabelText(/^발견 날짜\s*\*$/)).toHaveValue(getTodayDateInputValue())
     expect(screen.getByTestId('test-location-value')).toHaveTextContent(
@@ -279,5 +282,19 @@ describe('SightingReportFormPage', () => {
       'blob:three.jpg',
     ])
     expect(photoInput).toBeEnabled()
+  })
+
+  it('등록 중에는 중복 제출을 막고 API 오류를 안내한다', async () => {
+    render(
+      <SightingReportFormPage
+        errorMessage="제보를 등록하지 못했습니다. 다시 시도해 주세요."
+        isSubmitting
+      />,
+    )
+
+    expect(screen.getByRole('alert')).toHaveTextContent(
+      '제보를 등록하지 못했습니다. 다시 시도해 주세요.',
+    )
+    expect(document.querySelector('form')).toHaveAttribute('aria-busy', 'true')
   })
 })

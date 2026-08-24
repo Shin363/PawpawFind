@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { getAccessToken } from './authToken'
 import { env } from '@/config/env'
 
 export const apiClient = axios.create({
@@ -7,4 +8,10 @@ export const apiClient = axios.create({
   headers: {
     Accept: 'application/json',
   },
+})
+
+apiClient.interceptors.request.use((config) => {
+  const accessToken = getAccessToken()
+  if (accessToken) config.headers.Authorization = `Bearer ${accessToken}`
+  return config
 })

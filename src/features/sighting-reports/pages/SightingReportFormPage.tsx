@@ -48,6 +48,8 @@ interface SightingReportFormSubmission {
 
 interface SightingReportFormPageProps {
   onSubmit?: (submission: SightingReportFormSubmission) => void
+  errorMessage?: string
+  isSubmitting?: boolean
 }
 
 interface SightingPhotoPreviewProps {
@@ -84,7 +86,11 @@ function SightingPhotoPreview({ file, index, onRemove }: SightingPhotoPreviewPro
   )
 }
 
-export function SightingReportFormPage({ onSubmit }: SightingReportFormPageProps) {
+export function SightingReportFormPage({
+  errorMessage,
+  isSubmitting = false,
+  onSubmit,
+}: SightingReportFormPageProps) {
   const [step, setStep] = useState<1 | 2>(1)
   const [title, setTitle] = useState('')
   const [photos, setPhotos] = useState<File[]>([])
@@ -156,7 +162,12 @@ export function SightingReportFormPage({ onSubmit }: SightingReportFormPageProps
           </p>
         </header>
 
-        <form className="sighting-report-form" id="sighting-report-form" onSubmit={handleSubmit}>
+        <form
+          aria-busy={isSubmitting}
+          className="sighting-report-form"
+          id="sighting-report-form"
+          onSubmit={handleSubmit}
+        >
           {step === 1 && (
             <div className="sighting-report-form__columns">
               <div className="sighting-report-form__column">
@@ -191,7 +202,7 @@ export function SightingReportFormPage({ onSubmit }: SightingReportFormPageProps
                       }
                     >
                       <input
-                        accept="image/*"
+                        accept="image/jpeg,image/png,image/webp"
                         aria-describedby="sighting-photos-help"
                         aria-label="목격 사진 선택"
                         disabled={photos.length >= MAX_SIGHTING_PHOTOS}
@@ -378,8 +389,14 @@ export function SightingReportFormPage({ onSubmit }: SightingReportFormPageProps
 
       <div className="sighting-report-form__actions">
         <div className="sighting-report-form__actions-inner">
-          <Button disabled={!canSubmit} form="sighting-report-form" size="large" type="submit">
-            {step === 1 ? '다음 · 특징 고르기' : '제보 등록하기'}
+          {errorMessage && <p role="alert">{errorMessage}</p>}
+          <Button
+            disabled={!canSubmit || isSubmitting}
+            form="sighting-report-form"
+            size="large"
+            type="submit"
+          >
+            {step === 1 ? '다음 · 특징 고르기' : isSubmitting ? '제보 등록 중...' : '제보 등록하기'}
           </Button>
         </div>
       </div>

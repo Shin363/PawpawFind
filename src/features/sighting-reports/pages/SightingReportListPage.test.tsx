@@ -44,6 +44,7 @@ describe('SightingReportListPage', () => {
       }),
     ).toBeInTheDocument()
     expect(screen.getAllByText('2026.08.23').length).toBeGreaterThan(0)
+    expect(document.querySelectorAll('.sighting-report-list-item__thumbnail img')).toHaveLength(10)
     expect(screen.queryByText(/14–16시/)).not.toBeInTheDocument()
     const searchParams = new URL(requestedUrl).searchParams
     expect(searchParams.get('page')).toBe('0')

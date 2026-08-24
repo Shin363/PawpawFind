@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
 import { SightingReportListItem } from './SightingReportListItem'
@@ -38,5 +38,17 @@ describe('SightingReportListItem', () => {
 
     expect(onSelect).toHaveBeenCalledTimes(3)
     expect(onSelect).toHaveBeenNthCalledWith(1, 'p1')
+  })
+
+  it('썸네일을 표시하고 이미지 로드가 실패하면 대체 아이콘을 보여준다', () => {
+    const { container } = render(
+      <SightingReportListItem report={{ ...report, thumbnailUrl: '/report-thumbnail.jpg' }} />,
+    )
+    const image = container.querySelector('img')
+
+    expect(image).toHaveAttribute('src', '/report-thumbnail.jpg')
+    fireEvent.error(image!)
+    expect(container.querySelector('img')).not.toBeInTheDocument()
+    expect(container.querySelector('.sighting-report-list-item__thumbnail')).toHaveTextContent('🐾')
   })
 })

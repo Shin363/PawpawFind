@@ -1,8 +1,8 @@
-import type { RouteObject } from 'react-router'
+import { Navigate, type RouteObject } from 'react-router'
 import { HomePage } from '@/features/home'
+import { KakaoAuthCallbackPage } from '@/features/auth'
 import {
   MissingAnimalSearchFlowPage,
-  MissingAnimalSearchLandingPage,
   MissingAnimalSearchResultPage,
 } from '@/features/missing-animal-search'
 import { MyPage } from '@/features/my-page'
@@ -25,6 +25,10 @@ export const appRoutes: RouteObject[] = [
         Component: HomePage,
       },
       {
+        path: ROUTE_PATHS.KAKAO_AUTH_CALLBACK,
+        Component: KakaoAuthCallbackPage,
+      },
+      {
         path: ROUTE_PATHS.SIGHTING_REPORTS,
         Component: SightingReportListPage,
       },
@@ -37,8 +41,12 @@ export const appRoutes: RouteObject[] = [
         Component: SightingReportDetailPage,
       },
       {
+        path: ROUTE_PATHS.LOST_REPORT_DETAIL,
+        element: <SightingReportDetailPage reportType="LOST" />,
+      },
+      {
         path: ROUTE_PATHS.MISSING_ANIMAL_SEARCH,
-        Component: MissingAnimalSearchLandingPage,
+        element: <Navigate replace to={ROUTE_PATHS.MISSING_ANIMAL_SEARCH_FORM} />,
       },
       {
         path: ROUTE_PATHS.MISSING_ANIMAL_SEARCH_FORM,

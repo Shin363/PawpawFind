@@ -97,6 +97,7 @@ preview layout class로 관리한다.
 | SegmentedControl | 필수 단일 선택                      | selected/unselected, 전체·option disabled, native radio keyboard |
 | TextInput        | label·설명·오류가 연결된 한 줄 입력 | default/filled/disabled/required/help/invalid                    |
 | TimeBandSelect   | 시간 구간 단일 선택 custom dropdown | closed/open/selected/disabled, listbox keyboard                  |
+| ImageViewer      | 상세 사진을 modal에서 전체 표시     | closed/open, Esc·닫기 버튼, focus 복귀                           |
 
 공용 export는 각 컴포넌트 폴더의 `index.ts`에서 named export로만 제공한다.
 
