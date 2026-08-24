@@ -16,9 +16,10 @@ export interface SightingReportListResponse {
 
 export interface ReportListApiItem {
   reportId: number
+  thumbnailUrl: string | null
   userId: number | null
   reportType: string
-  title: string
+  title: string | null
   species: string
   size: string
   eventDate: string

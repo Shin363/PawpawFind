@@ -63,7 +63,7 @@ describe('MissingAnimalSearchFormPage', () => {
     expect(screen.queryByRole('textbox', { name: /제목/ })).not.toBeInTheDocument()
 
     const photoInput = screen.getByLabelText('실종 동물 사진 선택')
-    expect(photoInput).toHaveAttribute('accept', 'image/*')
+    expect(photoInput).toHaveAttribute('accept', 'image/jpeg,image/png,image/webp')
     expect(photoInput).toHaveAttribute('multiple')
     expect(screen.queryByLabelText('정면 사진 선택')).not.toBeInTheDocument()
     expect(screen.queryByLabelText('측면 사진 선택')).not.toBeInTheDocument()

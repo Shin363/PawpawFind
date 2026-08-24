@@ -46,6 +46,23 @@ export interface CreateReportFeatureRequest extends ReportFeatureInput {
   reportId: number
 }
 
+export interface CreateReportPhotoRequest {
+  reportId: number
+  photoUrl: string
+  sortOrder: number
+}
+
+export interface PresignUploadRequest {
+  filename: string
+  contentType: string
+}
+
+export interface PresignUploadResponse {
+  uploadUrl: string
+  photoUrl: string
+  objectKey: string
+}
+
 interface ReportFeatureGroup {
   category: ReportFeatureCategory
   label: string

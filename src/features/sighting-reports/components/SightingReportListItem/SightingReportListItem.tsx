@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import './SightingReportListItem.css'
 
 interface SightingReportListItemViewModel {
@@ -18,11 +19,19 @@ interface SightingReportListItemProps {
 }
 
 function Content({ report }: { report: SightingReportListItemViewModel }) {
+  const [hasImageError, setHasImageError] = useState(false)
+
+  useEffect(() => {
+    setHasImageError(false)
+  }, [report.thumbnailUrl])
+
+  const thumbnailUrl = hasImageError ? undefined : report.thumbnailUrl
+
   return (
     <>
       <div className="sighting-report-list-item__thumbnail">
-        {report.thumbnailUrl ? (
-          <img alt="" src={report.thumbnailUrl} />
+        {thumbnailUrl ? (
+          <img alt="" onError={() => setHasImageError(true)} src={thumbnailUrl} />
         ) : (
           <span aria-hidden="true">🐾</span>
         )}

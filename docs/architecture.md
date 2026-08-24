@@ -95,16 +95,16 @@ feature가 소유합니다.
 
 ### 확정 route
 
-| URL                       | 페이지                             | 인증 |
-| ------------------------- | ---------------------------------- | ---- |
-| `/`                       | 홈 placeholder                     | 공개 |
-| `/sightings`              | 목격 제보 목록                     | 공개 |
-| `/sightings/new`          | 목격 제보 입력 폼                  | 공개 |
-| `/sightings/:sightingId`  | 목격 제보 상세 placeholder         | 공개 |
-| `/find`                   | 실종 동물 찾기 landing placeholder | 필요 |
-| `/find/new`               | 실종 동물 찾기 입력 폼             | 필요 |
-| `/find/results/:searchId` | 실종 동물 찾기 결과 placeholder    | 필요 |
-| `/mypage`                 | 마이페이지 placeholder             | 필요 |
+| URL                       | 페이지                          | 인증 |
+| ------------------------- | ------------------------------- | ---- |
+| `/`                       | 홈 placeholder                  | 공개 |
+| `/sightings`              | 목격 제보 목록                  | 공개 |
+| `/sightings/new`          | 목격 제보 입력 폼               | 공개 |
+| `/sightings/:sightingId`  | 목격 제보 상세 placeholder      | 공개 |
+| `/find`                   | `/find/new`로 이동              | 공개 |
+| `/find/new`               | 실종 동물 찾기 입력 폼          | 필요 |
+| `/find/results/:searchId` | 실종 동물 찾기 결과 placeholder | 필요 |
+| `/mypage`                 | 마이페이지 placeholder          | 필요 |
 
 Browser history 기반 URL을 사용하므로 배포 서버는 파일이 없는 경로 요청에도 `index.html`을
 반환하는 SPA fallback이 필요합니다.

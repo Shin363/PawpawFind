@@ -1,13 +1,21 @@
 import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router'
+import { ImageViewer } from '@/components/ui/image-viewer'
 import { ReportLocationMap } from '@/features/report-location'
 import { useSightingReportQuery } from '../hooks/useSightingReportsQuery'
 import './SightingReportDetailPage.css'
 
-export function SightingReportDetailPage() {
+interface SightingReportDetailPageProps {
+  reportType?: 'FOUND' | 'LOST'
+}
+
+export function SightingReportDetailPage({ reportType = 'FOUND' }: SightingReportDetailPageProps) {
   const navigate = useNavigate()
-  const { sightingId } = useParams<{ sightingId: string }>()
-  const { data: report, isError, isPending, refetch } = useSightingReportQuery(sightingId)
+  const { sightingId, reportId } = useParams<{ sightingId: string; reportId: string }>()
+  const resolvedReportId = reportType === 'LOST' ? reportId : sightingId
+  const { data: report, isError, isPending, refetch } = useSightingReportQuery(resolvedReportId)
+  const isLostReport = reportType === 'LOST'
+  const reportLabel = isLostReport ? '등록된 실종 동물' : '목격 제보'
   const [isRouteOpen, setIsRouteOpen] = useState(false)
   const [selectedPhotoIndex, setSelectedPhotoIndex] = useState(0)
 
@@ -15,7 +23,7 @@ export function SightingReportDetailPage() {
     return (
       <main className="report-detail-page">
         <p className="report-detail-page__feedback" role="status">
-          목격 제보를 불러오는 중입니다.
+          {reportLabel} 정보를 불러오는 중입니다.
         </p>
       </main>
     )
@@ -23,7 +31,7 @@ export function SightingReportDetailPage() {
     return (
       <main className="report-detail-page">
         <div className="report-detail-page__feedback" role="alert">
-          <h1>목격 제보를 찾을 수 없습니다.</h1>
+          <h1>{reportLabel} 정보를 찾을 수 없습니다.</h1>
           <button onClick={() => void refetch()} type="button">
             다시 시도
           </button>
@@ -35,8 +43,8 @@ export function SightingReportDetailPage() {
     ['동물 종류', report.speciesLabel],
     ['색상', report.colorText],
     ['크기', report.sizeLabel],
-    ['발견 장소', report.areaText],
-    ['발견 시간', `${report.dateText} ${report.timeBandText}`],
+    [isLostReport ? '실종 장소' : '발견 장소', report.areaText],
+    [isLostReport ? '실종 시간' : '발견 시간', `${report.dateText} ${report.timeBandText}`],
     ['털 길이', report.coatLengthLabel],
     ['착용 중', report.wearingText],
     ['행동', report.behaviorText],
@@ -60,7 +68,11 @@ export function SightingReportDetailPage() {
           <div className="report-detail-page__carousel">
             <div className="report-detail-page__main-photo">
               {selectedPhoto ? (
-                <img alt={selectedPhoto.alt} src={selectedPhoto.url} />
+                <ImageViewer
+                  alt={selectedPhoto.alt}
+                  src={selectedPhoto.url}
+                  triggerLabel={`${selectedPhoto.alt} 전체 화면으로 보기`}
+                />
               ) : (
                 <span>제보 사진 {selectedPhotoIndex + 1}</span>
               )}
@@ -125,7 +137,7 @@ export function SightingReportDetailPage() {
                 <path d="M12 20.5s6.4-5.6 6.4-10.1a6.4 6.4 0 0 0-12.8 0c0 4.5 6.4 10.1 6.4 10.1Z" />
                 <circle cx="12" cy="10.2" r="2.3" />
               </svg>
-              목격 제보
+              {reportLabel}
             </span>
           </header>
           <dl className="report-detail-page__facts">
@@ -137,7 +149,7 @@ export function SightingReportDetailPage() {
             ))}
           </dl>
           <section aria-labelledby="location-title" className="report-detail-page__location">
-            <h2 id="location-title">발견 위치</h2>
+            <h2 id="location-title">{isLostReport ? '실종 위치' : '발견 위치'}</h2>
             <ReportLocationMap
               areaText={report.areaText}
               latitude={report.location.lat}

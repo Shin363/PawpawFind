@@ -1,4 +1,12 @@
 import { apiClient } from '@/api/client'
+import {
+  createReportWithAssets,
+  PRESIGN_UPLOAD_API_PATH,
+  REPORT_FEATURES_API_PATH,
+  REPORT_PHOTOS_API_PATH,
+  REPORTS_API_PATH,
+  type CreateReportSubmission,
+} from '@/api/reportCreation.api'
 import type {
   ReportFeatureApiItem,
   ReportListApiItem,
@@ -9,9 +17,9 @@ import type {
   SightingReportListResponse,
 } from '../types'
 
-export const SIGHTING_REPORTS_API_PATH = '/api/reports'
-export const REPORT_PHOTOS_API_PATH = '/api/report-photos'
-export const REPORT_FEATURES_API_PATH = '/api/report-features'
+export const SIGHTING_REPORTS_API_PATH = REPORTS_API_PATH
+export { PRESIGN_UPLOAD_API_PATH, REPORT_FEATURES_API_PATH, REPORT_PHOTOS_API_PATH }
+export type CreateSightingReportSubmission = CreateReportSubmission
 
 const speciesLabels: Record<string, string> = { DOG: '강아지', CAT: '고양이' }
 const sizeLabels: Record<string, string> = { SMALL: '소형', MEDIUM: '중형', LARGE: '대형' }
@@ -35,13 +43,18 @@ function getTimeBandText(eventHour: number | null) {
 export function toSightingReportListItem(report: ReportListApiItem): SightingReportListItem {
   return {
     id: String(report.reportId),
-    title: report.title,
+    title: report.title || '제목 없음',
     speciesLabel: speciesLabels[report.species] ?? report.species,
     colorText: '',
     sizeLabel: sizeLabels[report.size] ?? report.size,
     areaText: report.happenPlace,
     dateText: report.eventDate.replace(/-/g, '.'),
+    thumbnailUrl: report.thumbnailUrl || undefined,
   }
+}
+
+export async function createSightingReport(submission: CreateSightingReportSubmission) {
+  return createReportWithAssets(submission)
 }
 
 export async function getReportPhotos(reportId: string, signal?: AbortSignal) {

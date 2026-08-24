@@ -30,6 +30,7 @@ export const sightingReportApiItems: ReportListApiItem[] = reportSeeds.map(
     const day = String(23 - Math.floor(index / 2)).padStart(2, '0')
     return {
       reportId: index + 1,
+      thumbnailUrl: species === 'DOG' ? sampleDogImage : sampleCatImage,
       userId: 100 + index,
       reportType: 'FOUND',
       title,

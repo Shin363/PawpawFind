@@ -1,34 +1,34 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { routeUrls } from '@/app/router/paths'
+import { useCreateMissingAnimalSearchMutation } from '../hooks/useMissingAnimalSearch'
 import {
   MissingAnimalSearchFormPage,
   type MissingAnimalSearchFormSubmission,
 } from './MissingAnimalSearchFormPage'
 import './MissingAnimalSearchFlowPage.css'
 
-const MOCK_ANALYSIS_DELAY_MS = 1800
-
 export function MissingAnimalSearchFlowPage() {
   const navigate = useNavigate()
   const [previewUrl, setPreviewUrl] = useState('')
+  const createSearch = useCreateMissingAnimalSearchMutation()
 
   useEffect(() => {
     if (!previewUrl) return
 
-    const timer = window.setTimeout(() => {
-      navigate(routeUrls.missingAnimalSearchResult('mock-search'))
-    }, MOCK_ANALYSIS_DELAY_MS)
+    return () => URL.revokeObjectURL(previewUrl)
+  }, [previewUrl])
 
-    return () => {
-      window.clearTimeout(timer)
-      URL.revokeObjectURL(previewUrl)
-    }
-  }, [navigate, previewUrl])
-
-  const startSearch = ({ photos }: MissingAnimalSearchFormSubmission) => {
+  const startSearch = (submission: MissingAnimalSearchFormSubmission) => {
+    const { photos } = submission
     const firstPhoto = photos[0]?.file
     if (firstPhoto) setPreviewUrl(URL.createObjectURL(firstPhoto))
+
+    createSearch.mutate(submission, {
+      onSuccess: ({ reportId }) => {
+        navigate(routeUrls.missingAnimalSearchResult(String(reportId)), { replace: true })
+      },
+    })
   }
 
   if (!previewUrl) return <MissingAnimalSearchFormPage onSubmit={startSearch} />
@@ -51,6 +51,14 @@ export function MissingAnimalSearchFlowPage() {
           <span />
         </div>
         <p>전국 보호소와 목격 제보에서 비슷한 동물을 확인하고 있어요.</p>
+        {createSearch.isError && (
+          <div className="missing-animal-analysis__error" role="alert">
+            <p>비슷한 동물을 찾지 못했습니다. 잠시 후 다시 시도해 주세요.</p>
+            <button onClick={() => createSearch.mutate(createSearch.variables!)} type="button">
+              다시 시도
+            </button>
+          </div>
+        )}
       </section>
     </main>
   )

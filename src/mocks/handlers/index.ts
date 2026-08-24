@@ -1,3 +1,9 @@
+import { authHandlers } from './auth'
+import { missingAnimalSearchHandlers } from './missingAnimalSearch'
 import { sightingReportsHandlers } from './sightingReports'
 
-export const handlers = [...sightingReportsHandlers]
+export const handlers = [
+  ...authHandlers,
+  ...missingAnimalSearchHandlers,
+  ...sightingReportsHandlers,
+]
