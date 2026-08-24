@@ -15,7 +15,9 @@ function renderRoute(initialEntry: string) {
 describe('appRoutes', () => {
   it('홈 경로를 렌더링한다', () => {
     renderRoute('/')
-    expect(screen.getByRole('heading', { name: 'PawpawFind' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: /잃어버린 반려동물을/ })).toBeInTheDocument()
+    expect(screen.getByRole('contentinfo')).toHaveTextContent('국가동물보호정보시스템 공공데이터')
+    expect(screen.queryByRole('link', { name: '마이페이지' })).not.toBeInTheDocument()
   })
 
   it('카카오 인가 코드를 백엔드 인증 API와 교환한다', async () => {
@@ -26,14 +28,31 @@ describe('appRoutes', () => {
       expect(router.state.location.pathname).toBe('/')
       expect(localStorage.getItem('pawpawfind.accessToken')).toBe('mock-access-token')
     })
-    expect(screen.getByRole('heading', { name: 'PawpawFind' })).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { name: /잃어버린 반려동물을/ })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: '마이페이지' })).toBeInTheDocument()
+  })
+
+  it('실종 동물 찾기 로그인 후 원래 목적지로 이동한다', async () => {
+    sessionStorage.setItem('pawpawfind.kakaoOAuthState', 'oauth-state')
+    sessionStorage.setItem('pawpawfind.kakaoOAuthReturnTo', '/find/new')
+    const router = renderRoute('/auth/kakao/callback?code=kakao-code&state=oauth-state')
+
+    await waitFor(() => expect(router.state.location.pathname).toBe('/find/new'))
+    expect(
+      await screen.findByRole('heading', { name: '잃어버린 아이의 정보를 알려주세요' }),
+    ).toBeVisible()
+    expect(sessionStorage.getItem('pawpawfind.kakaoOAuthReturnTo')).toBeNull()
   })
 
   it('미인증 사용자가 실종 동물 찾기를 누르면 카카오 로그인 창을 보여준다', async () => {
     const user = userEvent.setup()
     const router = renderRoute('/')
 
-    await user.click(screen.getByRole('link', { name: '실종 동물 찾기' }))
+    await user.click(
+      within(screen.getByRole('navigation', { name: '주요 메뉴' })).getByRole('link', {
+        name: '실종 동물 찾기',
+      }),
+    )
 
     expect(router.state.location.pathname).toBe('/')
     expect(
@@ -52,13 +71,20 @@ describe('appRoutes', () => {
     const user = userEvent.setup()
     const router = renderRoute('/')
 
-    await user.click(screen.getByRole('link', { name: '실종 동물 찾기' }))
+    expect(screen.getByRole('link', { name: '마이페이지' })).toHaveAttribute('href', '/mypage')
+
+    await user.click(
+      within(screen.getByRole('navigation', { name: '주요 메뉴' })).getByRole('link', {
+        name: '실종 동물 찾기',
+      }),
+    )
 
     expect(router.state.location.pathname).toBe('/find/new')
     expect(screen.getByRole('heading', { name: '잃어버린 아이의 정보를 알려주세요' })).toBeVisible()
   })
 
   it('기존 실종 동물 찾기 주소는 입력 화면으로 이동시킨다', async () => {
+    localStorage.setItem('pawpawfind.accessToken', 'mock-access-token')
     const router = renderRoute('/find')
 
     await waitFor(() => expect(router.state.location.pathname).toBe('/find/new'))
@@ -68,6 +94,12 @@ describe('appRoutes', () => {
   it('목격 제보 목록을 공개 경로로 렌더링한다', () => {
     renderRoute('/sightings')
     expect(screen.getByRole('heading', { name: '목격 제보 목록' })).toBeInTheDocument()
+    expect(screen.queryByRole('contentinfo')).not.toBeInTheDocument()
+    expect(
+      within(screen.getByRole('navigation', { name: '주요 메뉴' })).getByRole('link', {
+        name: '목격 제보',
+      }),
+    ).toHaveClass('active')
   })
 
   it('목격 제보 입력 폼을 공개 경로로 렌더링한다', () => {
@@ -75,6 +107,12 @@ describe('appRoutes', () => {
     expect(
       screen.getByRole('heading', { name: '목격한 동물의 사진을 올려주세요' }),
     ).toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: '이전으로' })).not.toBeInTheDocument()
+    expect(
+      within(screen.getByRole('navigation', { name: '주요 메뉴' })).getByRole('link', {
+        name: '목격 제보',
+      }),
+    ).not.toHaveClass('active')
   })
 
   it('목격 제보 상세 route parameter로 데이터를 불러온다', async () => {
@@ -94,6 +132,7 @@ describe('appRoutes', () => {
   })
 
   it('우리 아이 찾기 결과를 출처별로 필터링한다', async () => {
+    localStorage.setItem('pawpawfind.accessToken', 'mock-access-token')
     const user = userEvent.setup()
     renderRoute('/find/results/search-1')
 
@@ -124,6 +163,7 @@ describe('appRoutes', () => {
   })
 
   it('비슷한 후보가 없으면 다시 검색할 수 있는 빈 결과를 보여준다', async () => {
+    localStorage.setItem('pawpawfind.accessToken', 'mock-access-token')
     renderRoute('/find/results/empty')
 
     expect(
@@ -148,7 +188,20 @@ describe('appRoutes', () => {
       authRequired: true,
       returnTo: '/mypage',
     })
-    expect(screen.getByRole('dialog')).toHaveTextContent('카카오로 계속하기')
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+  })
+
+  it('미인증 사용자가 실종 동물 찾기 URL에 직접 접근하면 홈으로 이동시킨다', async () => {
+    const router = renderRoute('/find/new')
+
+    await waitFor(() => expect(router.state.location.pathname).toBe('/'))
+    expect(router.state.location.state).toEqual({
+      authRequired: true,
+      returnTo: '/find/new',
+    })
+    expect(
+      screen.queryByRole('heading', { name: '잃어버린 아이의 정보를 알려주세요' }),
+    ).not.toBeInTheDocument()
   })
 
   it('마이페이지에서 계정과 내 제보를 확인하고 로그아웃한다', async () => {
@@ -168,6 +221,7 @@ describe('appRoutes', () => {
     expect(router.state.location.pathname).toBe('/')
     expect(localStorage.getItem('pawpawfind.accessToken')).toBeNull()
     expect(localStorage.getItem('pawpawfind.authUser')).toBeNull()
+    expect(screen.queryByRole('link', { name: '마이페이지' })).not.toBeInTheDocument()
   })
 
   it('마이페이지에서 확인 후 내 글을 삭제한다', async () => {

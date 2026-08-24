@@ -49,20 +49,22 @@ export const appRoutes: RouteObject[] = [
         element: <Navigate replace to={ROUTE_PATHS.MISSING_ANIMAL_SEARCH_FORM} />,
       },
       {
-        path: ROUTE_PATHS.MISSING_ANIMAL_SEARCH_FORM,
-        Component: MissingAnimalSearchFlowPage,
-      },
-      {
-        path: ROUTE_PATHS.MISSING_ANIMAL_SEARCH_RESULT,
-        Component: MissingAnimalSearchResultPage,
-      },
-      {
         path: ROUTE_PATHS.SHELTER_NOTICE_DETAIL,
         Component: ShelterNoticeDetailPage,
       },
       {
         Component: RequireAuth,
-        children: [{ path: ROUTE_PATHS.MY_PAGE, Component: MyPage }],
+        children: [
+          {
+            path: ROUTE_PATHS.MISSING_ANIMAL_SEARCH_FORM,
+            Component: MissingAnimalSearchFlowPage,
+          },
+          {
+            path: ROUTE_PATHS.MISSING_ANIMAL_SEARCH_RESULT,
+            Component: MissingAnimalSearchResultPage,
+          },
+          { path: ROUTE_PATHS.MY_PAGE, Component: MyPage },
+        ],
       },
       {
         path: '*',
