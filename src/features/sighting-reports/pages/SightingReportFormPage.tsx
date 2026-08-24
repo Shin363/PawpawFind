@@ -1,5 +1,4 @@
 import { useEffect, useState, type ChangeEvent, type FormEvent } from 'react'
-import { ROUTE_PATHS } from '@/app/router/paths'
 import { Button } from '@/components/ui/button'
 import { SegmentedControl } from '@/components/ui/segmented-control'
 import { SelectableChip } from '@/components/ui/selectable-chip'
@@ -137,11 +136,7 @@ export function SightingReportFormPage({
   return (
     <>
       <main className="sighting-report-form-page">
-        {step === 1 ? (
-          <a className="sighting-report-form__back" href={ROUTE_PATHS.SIGHTING_REPORTS}>
-            <span aria-hidden="true">←</span> 이전으로
-          </a>
-        ) : (
+        {step === 2 && (
           <button className="sighting-report-form__back" onClick={() => setStep(1)} type="button">
             <span aria-hidden="true">←</span> 이전 단계
           </button>

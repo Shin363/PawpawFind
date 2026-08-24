@@ -1,7 +1,11 @@
 import axios from 'axios'
 import { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router'
-import { exchangeKakaoCode, validateKakaoOAuthState } from '@/api/auth.api'
+import {
+  consumeKakaoLoginReturnTo,
+  exchangeKakaoCode,
+  validateKakaoOAuthState,
+} from '@/api/auth.api'
 import { saveAccessToken, saveAuthUser } from '@/api/authToken'
 import { routeUrls } from '@/app/router/paths'
 import './KakaoAuthCallbackPage.css'
@@ -39,7 +43,7 @@ export function KakaoAuthCallbackPage() {
       .then((auth) => {
         saveAccessToken(auth.accessToken)
         saveAuthUser({ userId: auth.userId, nickname: auth.nickname, provider: auth.provider })
-        void navigate(routeUrls.home(), { replace: true })
+        void navigate(consumeKakaoLoginReturnTo(), { replace: true })
       })
       .catch((requestError: unknown) => {
         const status = axios.isAxiosError(requestError) ? requestError.response?.status : undefined
