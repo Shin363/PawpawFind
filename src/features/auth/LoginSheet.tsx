@@ -35,7 +35,6 @@ export function LoginSheet({ onDismiss, onKakaoLogin }: LoginSheetProps) {
       }}
       ref={dialogRef}
     >
-      <div className="login-sheet__handle" />
       <button
         aria-label="로그인 창 닫기"
         className="login-sheet__close"
@@ -44,12 +43,8 @@ export function LoginSheet({ onDismiss, onKakaoLogin }: LoginSheetProps) {
       >
         ×
       </button>
-      <h2 id="login-sheet-title">우리 아이 찾기는 로그인이 필요해요</h2>
-      <p id="login-sheet-description">
-        등록한 사진과 정보를 저장해두고, 새로운 후보가 나올 때 알려드리기 위해서예요.
-        <br />
-        목격 제보는 로그인 없이 계속 할 수 있어요.
-      </p>
+      <h2 id="login-sheet-title">실종 동물 찾기는 로그인이 필요해요</h2>
+      <p id="login-sheet-description">목격 제보는 로그인 없이 계속 할 수 있어요.</p>
       <button
         className="login-sheet__kakao"
         onClick={onKakaoLogin}

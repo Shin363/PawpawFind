@@ -18,7 +18,7 @@ describe('appRoutes', () => {
     expect(screen.getByRole('heading', { name: 'PawpawFind' })).toBeInTheDocument()
   })
 
-  it('미인증 사용자가 우리 아이 찾기를 누르면 카카오 로그인 창을 보여준다', async () => {
+  it('미인증 사용자가 실종 동물 찾기를 누르면 카카오 로그인 창을 보여준다', async () => {
     const user = userEvent.setup()
     const router = renderRoute('/')
 
@@ -26,8 +26,9 @@ describe('appRoutes', () => {
 
     expect(router.state.location.pathname).toBe('/')
     expect(
-      screen.getByRole('heading', { name: '우리 아이 찾기는 로그인이 필요해요' }),
+      screen.getByRole('heading', { name: '실종 동물 찾기는 로그인이 필요해요' }),
     ).toBeInTheDocument()
+    expect(screen.getByText('목격 제보는 로그인 없이 계속 할 수 있어요.')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: '카카오로 계속하기' })).toHaveFocus()
     expect(screen.queryByRole('button', { name: /Google/ })).not.toBeInTheDocument()
 

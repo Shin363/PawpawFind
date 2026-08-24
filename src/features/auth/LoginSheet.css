@@ -16,16 +16,6 @@
 .login-sheet::backdrop {
   background: rgb(31 41 55 / 42%);
 }
-.login-sheet__handle {
-  position: absolute;
-  top: var(--space-4);
-  left: 50%;
-  width: 44px;
-  height: 5px;
-  translate: -50% 0;
-  border-radius: var(--radius-full);
-  background: var(--color-border);
-}
 .login-sheet__close {
   position: absolute;
   top: var(--space-3);
