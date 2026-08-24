@@ -49,15 +49,11 @@ export function SightingReportDetailPage() {
 
   return (
     <main className="report-detail-page">
-      <button
-        className="report-detail-page__back"
-        onClick={() => navigate('/sightings')}
-        type="button"
-      >
+      <button className="report-detail-page__back" onClick={() => navigate(-1)} type="button">
         <svg aria-hidden="true" fill="none" viewBox="0 0 24 24">
           <path d="m14.5 5.5-6.5 6.5 6.5 6.5" />
         </svg>
-        목록으로
+        뒤로 가기
       </button>
       <div className="report-detail-page__layout">
         <section aria-label="제보 사진" className="report-detail-page__gallery">

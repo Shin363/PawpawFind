@@ -34,7 +34,7 @@ export function AppLayout() {
           <nav aria-label="주요 메뉴">
             <NavLink to={routeUrls.sightingReports()}>목격 제보</NavLink>
             <NavLink onClick={handleFindClick} to={routeUrls.missingAnimalSearch()}>
-              우리 아이 찾기
+              실종 동물 찾기
             </NavLink>
           </nav>
           <NavLink aria-label="마이페이지" className="app-header__mypage" to={routeUrls.myPage()}>
